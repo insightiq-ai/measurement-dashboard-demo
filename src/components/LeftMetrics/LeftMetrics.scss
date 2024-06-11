@@ -1,0 +1,53 @@
+@import "../../styles/insightIq.scss";
+
+.div-left-metrics {
+  display: flex;
+  padding: 40px 48px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 67px;
+  border-radius: 6px;
+  border: 1px solid var(--Neutrals-Border-grey, #E5E5E8);
+
+  .div-main-metric {
+    display: flex;
+    width: 254px;
+    padding-right: 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+
+    .div-metric-and-title {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      align-self: stretch;
+
+      .div-metric {
+        color: var(--Semantics-Primary-success, #13714A);
+        text-align: center;
+        font-family: Inter;
+        font-size: 40px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+        letter-spacing: -0.4px;
+      }
+
+      .div-title {
+        @extend .color-neutrals-secondary-grey;
+        @extend .section-heading;
+        display: flex;
+        flex-direction: row;
+        gap: 4px;
+      }
+    }
+  }
+
+  .div-sub-metric {
+    display: flex;
+    align-items: flex-start;
+    gap: 48px;
+  }
+}
