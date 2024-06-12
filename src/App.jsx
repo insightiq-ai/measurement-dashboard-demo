@@ -24,12 +24,12 @@ function App() {
     const [warehouse, dispatchWarehouse] = useReducer(warehouseReducer, DEFAULT_WAREHOUSE_STATE);
 
     return (
-        <>
+        <div className={'div-app'}>
             <CssBaseline/>
             <WarehouseContext.Provider value={{ warehouse, dispatchWarehouse }}>
                 <PerformancePage/>
             </WarehouseContext.Provider>
-        </>
+        </div>
     );
 }
 

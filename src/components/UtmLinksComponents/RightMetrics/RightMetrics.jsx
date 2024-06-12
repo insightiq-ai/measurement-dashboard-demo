@@ -4,18 +4,22 @@ import './RightMetrics.scss';
 
 export default function RightMetrics({ rightMetrics }) {
     return (
-        <div className={'div-right-metrics'}>
-            {rightMetrics?.map(({ icon, value, name, subtitle, tooltip }, index) => {
+        <div className={'div-right-metrics-utmlinks'}>
+            {rightMetrics?.map(({ icon, value, name }, index) => {
                 return (
-                    <PerformanceMetric
-                        key={index}
-                        variant={'infoMetricIcon'}
-                        metricIcon={icon}
-                        content={value}
-                        metricName={name}
-                        tooltip={tooltip}
-                        subtitle={subtitle}
-                    />
+                    <div key={index}>
+                        <div className={'div-right-single-metric-utmlinks'}>
+                            {icon}
+                            <PerformanceMetric
+                                variant={'infoIcon'}
+                                content={value}
+                                metricName={name}
+                            />
+                        </div>
+                        {index < rightMetrics.length - 1 && (
+                            <div className="vertical-line-utmlinks"></div>
+                        )}
+                    </div>
                 );
             })}
         </div>

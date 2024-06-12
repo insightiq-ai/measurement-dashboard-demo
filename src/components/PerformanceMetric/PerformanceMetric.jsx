@@ -18,9 +18,9 @@ export default function PerformanceMetric({ variant, metricIcon, content, metric
                 <div className='metric-content'>{content}</div>
                 <div className='info-name-container'>
                     {metricName}
-                    <Tooltip placement='right-end' title={tooltip}>
+                    {tooltip && <Tooltip placement='right-end' title={tooltip}>
                         <i className="ri-information-line info-icon"></i>
-                    </Tooltip>
+                    </Tooltip>}
                 </div>
             </div>
         )

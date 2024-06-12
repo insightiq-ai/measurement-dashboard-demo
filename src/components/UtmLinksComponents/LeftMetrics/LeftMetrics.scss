@@ -1,6 +1,6 @@
 @import "../../../styles/insightIq";
 
-.div-page-metrics-utmlinks {
+.div-left-metrics-utmlinks {
   display: flex;
   width: 465px;
   flex-direction: column;
@@ -10,7 +10,6 @@
 
   .div-main-metric-utmlinks {
     display: flex;
-    width: 254px;
     padding-right: 16px;
     flex-direction: column;
     align-items: flex-start;
@@ -18,7 +17,6 @@
 
     .div-metric-and-title-utmlinks {
       display: flex;
-      width: 254px;
       padding-right: 16px;
       flex-direction: column;
       align-items: flex-start;
@@ -38,12 +36,11 @@
       .div-title-utmlinks {
         @extend .color-neutrals-secondary-grey;
         @extend .section-heading;
-        text-align: center;
       }
     }
   }
 
-  .div-sub-metric {
+  .div-sub-metric-utmlinks {
     display: flex;
     align-items: flex-start;
     gap: 48px;

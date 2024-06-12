@@ -5,9 +5,9 @@ import './LeftMetrics.scss';
 export default function LeftMetrics({ mainMetric, subMetrics }) {
     const { value: mainMetricValue, title: mainMetricTitle } = mainMetric;
     return (
-        <div className={'div-page-metrics-utmlinks'}>
+        <div className={'div-left-metrics-utmlinks'}>
             <div className={'div-main-metric-utmlinks'}>
-                <Icons.total_roi />
+                <Icons.ctr />
                 <div className={'div-metric-and-title-utmlinks'}>
                     <div className={'div-metric-utmlinks'}>
                         {mainMetricValue}
@@ -17,7 +17,7 @@ export default function LeftMetrics({ mainMetric, subMetrics }) {
                     </div>
                 </div>
             </div>
-            <div className={'div-sub-metric'}>
+            <div className={'div-sub-metric-utmlinks'}>
                 {subMetrics?.map(({ icon, value, name, subtitle, tooltip }, index) => {
                     return (
                         <PerformanceMetric
