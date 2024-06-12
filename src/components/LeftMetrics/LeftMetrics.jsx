@@ -18,9 +18,10 @@ export default function LeftMetrics({ mainMetric, subMetrics }) {
                 </div>
             </div>
             <div className={'div-sub-metric'}>
-                {subMetrics?.map(({ icon, value, name, subtitle, tooltip }) => {
+                {subMetrics?.map(({ icon, value, name, subtitle, tooltip }, index) => {
                     return (
                         <PerformanceMetric
+                            key={index}
                             variant={'infoMetricIcon'}
                             metricIcon={icon}
                             content={value}

@@ -1,0 +1,1 @@
+export const CURR_SELECTED_ENV_KEY = "CURR_SELECTED_ENV"

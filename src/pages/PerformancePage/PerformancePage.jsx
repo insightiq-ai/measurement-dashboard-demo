@@ -1,11 +1,50 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './PerformancePage.scss';
 import PageMetrics from "../../components/PageMetrics/PageMetrics";
 import { TabSwitch } from "../../components";
 import { SUMMARY, UTM_LINKS } from "../../utils/constants";
 import TabPanel from "../../components/TabSwitch/TabPanel";
+import {
+    getAttributionStatistics,
+    getDashboardLinkMetrics,
+    getPromocodeAnalytics,
+    getUserById,
+    getUserEvents,
+    getUsers
+} from "../../api/api";
 
 export default function PerformancePage(props) {
+    useEffect(() => {
+        getPromocodeAnalytics({ storeId: '671ade3e-133b-4bcb-932e-a81321e9cc83' }).then((res) => {
+            console.log(`getPromocodeAnalytics`);
+            console.log(res);
+        });
+
+        getAttributionStatistics().then((res) => {
+            console.log(`getAttributionStatistics`);
+            console.log(res);
+        });
+
+        getDashboardLinkMetrics().then((res) => {
+            console.log(`getDashboardLinkMetrics`);
+            console.log(res);
+        });
+
+        getUsers().then((res) => {
+            console.log(`getUsers`);
+            console.log(res);
+        });
+
+        getUserById({ userId: 'ec46c10a-42ac-4949-a9bd-33c0a56f7a62' }).then((res) => {
+            console.log(`getUserById`);
+            console.log(res);
+        });
+
+        getUserEvents({ userId: 'ec46c10a-42ac-4949-a9bd-33c0a56f7a62' }).then((res) => {
+            console.log(`getUserEvents`);
+            console.log(res);
+        });
+    }, []);
     const [currentTab, setCurrentTab] = useState(SUMMARY);
     const tabs = [
         {
