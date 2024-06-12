@@ -4,51 +4,20 @@ import SummaryMetrics from "../../components/SummaryComponents/SummaryMetrics/Su
 import { TabSwitch } from "../../components";
 import { SUMMARY, UTM_LINKS } from "../../utils/constants";
 import TabPanel from "../../components/TabSwitch/TabPanel";
-import { getAttributionStatistics, getDashboardLinkMetrics, getPromocodeAnalytics } from "../../api/api";
+import { getAttributionStatistics, getDashboardLinkMetrics, getPromocodeAnalytics, getUsers } from "../../api/api";
 import { currencyFormatter, formatNumber, isEmpty, percentFormatter } from "../../utils/util";
 import UtmLinksMetrics from "../../components/UtmLinksComponents/UtmLinksMetrics/UtmLinksMetrics";
+import Grid from "../../components/Grid/Grid";
+import { getSortedHeaderClass } from "../../utils/DataGridUtils";
 
 export default function PerformancePage(props) {
     const [analytics, setAnalytics] = useState(null);
     const [attributionStatistics, setAttributionStatistics] = useState(null);
     const [dashboardLinkMetrics, setDashboardLinkMetrics] = useState(null);
+
     const TOTAL_CREATOR_COST = 2000;
     const NUMBER_OF_CREATORS = 3;
 
-    useEffect(() => {
-        getPromocodeAnalytics({ storeId: '671ade3e-133b-4bcb-932e-a81321e9cc83' }).then((res) => {
-            console.log(`getPromocodeAnalytics`);
-            console.log(res);
-            setAnalytics(res);
-        });
-
-        getAttributionStatistics().then((res) => {
-            console.log(`getAttributionStatistics`);
-            console.log(res);
-            setAttributionStatistics(res);
-        });
-
-        getDashboardLinkMetrics().then((res) => {
-            console.log(`getDashboardLinkMetrics`);
-            console.log(res);
-            setDashboardLinkMetrics(res);
-        });
-        //
-        // getUsers().then((res) => {
-        //     console.log(`getUsers`);
-        //     console.log(res);
-        // });
-        //
-        // getUserById({ userId: 'ec46c10a-42ac-4949-a9bd-33c0a56f7a62' }).then((res) => {
-        //     console.log(`getUserById`);
-        //     console.log(res);
-        // });
-        //
-        // getUserEvents({ userId: 'ec46c10a-42ac-4949-a9bd-33c0a56f7a62' }).then((res) => {
-        //     console.log(`getUserEvents`);
-        //     console.log(res);
-        // });
-    }, []);
     const [currentTab, setCurrentTab] = useState(SUMMARY);
     const tabs = [
         {
@@ -79,6 +48,155 @@ export default function PerformancePage(props) {
     const costPerLpv = (!isEmpty(totalCreatorCost) && totalCreatorCost !== 0) ? totalCreatorCost / landingPageViews : null;
     const addToCarts = null;
     const checkoutsInitiated = null;
+
+    const defaultSortModel = [{ field: 'updated_at', sort: 'desc' }];
+    const [sortModel, setSortModel] = useState(defaultSortModel);
+    const ROW_HEIGHT = 100;
+    const PAGE_SIZE = 10;
+    const [isGridLoading, setGridLoading] = useState(false);
+    const [pageNumber, setPageNumber] = useState(0);
+    const [totalUserRows, setTotalUserRows] = useState(0);
+    const [userRows, setUserRows] = useState([]);
+
+    useEffect(() => {
+        const storeId = '671ade3e-133b-4bcb-932e-a81321e9cc83';
+        // const storeId = '554ad27b-7eba-4980-a3ff-f4c4e7e38d26';
+        getPromocodeAnalytics({ storeId }).then((res) => {
+            console.log(`getPromocodeAnalytics`);
+            console.log(res);
+            setAnalytics(res);
+        });
+    }, []);
+
+    useEffect(() => {
+
+        getAttributionStatistics().then((res) => {
+            console.log(`getAttributionStatistics`);
+            console.log(res);
+            setAttributionStatistics(res);
+        });
+    }, []);
+
+    useEffect(() => {
+        getDashboardLinkMetrics().then((res) => {
+            console.log(`getDashboardLinkMetrics`);
+            console.log(res);
+            setDashboardLinkMetrics(res);
+        });
+
+
+        //
+        // getUserById({ userId: 'ec46c10a-42ac-4949-a9bd-33c0a56f7a62' }).then((res) => {
+        //     console.log(`getUserById`);
+        //     console.log(res);
+        // });
+        //
+        // getUserEvents({ userId: 'ec46c10a-42ac-4949-a9bd-33c0a56f7a62' }).then((res) => {
+        //     console.log(`getUserEvents`);
+        //     console.log(res);
+        // });
+    }, []);
+
+    useEffect(() => {
+        setGridLoading(true);
+        getUsers({
+            limit: PAGE_SIZE,
+            offset: pageNumber * PAGE_SIZE,
+        }).then((res) => {
+            console.log(`getUsers`);
+            console.log(res);
+            const { data } = res;
+            setUserRows(data);
+
+        }).finally(() => {
+            setGridLoading(false);
+        });
+    }, [sortModel, pageNumber]);
+
+    useEffect(() => {
+        if (!isEmpty(attributionStatistics)) {
+            setTotalUserRows(attributionStatistics.number_of_users);
+        }
+    }, [attributionStatistics]);
+
+    const commonHeaderProps = {
+        flex: 1,
+        headerClassName: 'subtitle-m mui-data-grid-header hideRightSeparator',
+    };
+
+    function renderIdCell(params) {
+        const id = params.row['id'];
+        return id;
+    }
+
+    function renderEventsCell(params) {
+        const number_of_events = params.row['number_of_events'];
+        return number_of_events;
+    }
+
+    function renderTotalSalesCell(params) {
+        const id = params.row['id'];
+        return id;
+    }
+
+    function renderDeviceCountCell(params) {
+        const number_of_fingerprints = params.row['number_of_fingerprints'];
+        return number_of_fingerprints;
+    }
+
+    function renderLastActiveCell(params) {
+        const updated_at = params.row['updated_at'];
+        return updated_at;
+    }
+
+    const columns = [
+        {
+            ...commonHeaderProps,
+            align: 'left',
+            field: 'id',
+            headerAlign: 'left',
+            headerName: 'User ID',
+            renderCell: renderIdCell,
+            sortable: false,
+        },
+        {
+            ...commonHeaderProps,
+            align: 'left',
+            field: 'number_of_events',
+            headerAlign: 'left',
+            headerName: 'Events collected',
+            renderCell: renderEventsCell,
+            sortable: false,
+        },
+        {
+            ...commonHeaderProps,
+            align: 'left',
+            field: 'id',
+            headerAlign: 'left',
+            headerName: 'Total sales',
+            renderCell: renderTotalSalesCell,
+            sortable: false,
+        },
+        {
+            ...commonHeaderProps,
+            align: 'right',
+            field: 'number_of_fingerprints',
+            headerAlign: 'right',
+            headerName: 'Device count',
+            renderCell: renderDeviceCountCell,
+            sortable: false,
+        },
+        {
+            ...commonHeaderProps,
+            align: 'left',
+            field: 'updated_at',
+            headerAlign: 'left',
+            headerName: 'Last active on',
+            renderCell: renderLastActiveCell,
+            headerClassName: `${commonHeaderProps.headerClassName} ${getSortedHeaderClass(sortModel, 'updated_at')}`,
+            sortable: false,
+        }
+    ];
 
     return (
         <div className={'div-performance-page'}>
@@ -140,45 +258,60 @@ export default function PerformancePage(props) {
                         />
                     </TabPanel>
                     <TabPanel index={UTM_LINKS} value={currentTab}>
-                        <UtmLinksMetrics leftMetrics={{
-                            mainMetric: {
-                                value: !isEmpty(clickThroughRate) ? percentFormatter.format(clickThroughRate) : '-',
-                                title: 'CTR (Click Through Rate)'
-                            },
-                            subMetrics: [{
-                                icon: <i className="ri-money-dollar-circle-line metric-icon"></i>,
-                                value: !isEmpty(costPerLpv) ? currencyFormatter.format(costPerLpv) : '-',
-                                name: 'Cost per LPV',
-                                subtitle: `${!isEmpty(averageSalesPerUser) ? currencyFormatter.format(averageSalesPerUser) : '-'} average sales per user`,
-                            }]
-                        }}
-                                         rightMetrics={[{
-                                             icon: <i className="ri-eye-line ri-xl"></i>,
-                                             value: !isEmpty(totalLinkClicks) ? formatNumber(totalLinkClicks) : '-',
-                                             name: 'Total link clicks',
-                                         }, {
-                                             icon: <i className="ri-eye-line ri-xl"></i>,
-                                             value: !isEmpty(landingPageViews) ? formatNumber(landingPageViews) : '-',
-                                             name: 'Landing page views',
-                                         }, {
-                                             icon: <i className="ri-eye-line ri-xl"></i>,
-                                             value: !isEmpty(addToCarts) ? formatNumber(addToCarts) : '-',
-                                             name: 'Add to carts',
-                                         }, {
-                                             icon: <i className="ri-eye-line ri-xl"></i>,
-                                             value: !isEmpty(checkoutsInitiated) ? formatNumber(checkoutsInitiated) : '-',
-                                             name: 'Total users',
-                                             tooltip: 'Total sales generated by the company'
-                                         }, {
-                                             icon: <i className="ri-eye-line ri-xl"></i>,
-                                             value: !isEmpty(totalOrders) ? formatNumber(totalOrders) : '-',
-                                             name: 'Total users',
-                                             tooltip: 'Total sales generated by the company'
-                                         }]}
+                        <UtmLinksMetrics
+                            leftMetrics={{
+                                mainMetric: {
+                                    value: !isEmpty(clickThroughRate) ? percentFormatter.format(clickThroughRate) : '-',
+                                    title: 'CTR (Click Through Rate)'
+                                },
+                                subMetrics: [{
+                                    icon: <i className="ri-money-dollar-circle-line metric-icon"></i>,
+                                    value: !isEmpty(costPerLpv) ? currencyFormatter.format(costPerLpv) : '-',
+                                    name: 'Cost per LPV',
+                                    subtitle: `${!isEmpty(averageSalesPerUser) ? currencyFormatter.format(averageSalesPerUser) : '-'} average sales per user`,
+                                }]
+                            }}
+                            rightMetrics={[{
+                                icon: <i className="ri-eye-line ri-xl"></i>,
+                                value: !isEmpty(totalLinkClicks) ? formatNumber(totalLinkClicks) : '-',
+                                name: 'Total link clicks',
+                            }, {
+                                icon: <i className="ri-eye-line ri-xl"></i>,
+                                value: !isEmpty(landingPageViews) ? formatNumber(landingPageViews) : '-',
+                                name: 'Landing page views',
+                            }, {
+                                icon: <i className="ri-eye-line ri-xl"></i>,
+                                value: !isEmpty(addToCarts) ? formatNumber(addToCarts) : '-',
+                                name: 'Add to carts',
+                            }, {
+                                icon: <i className="ri-eye-line ri-xl"></i>,
+                                value: !isEmpty(checkoutsInitiated) ? formatNumber(checkoutsInitiated) : '-',
+                                name: 'Checkouts initiated',
+                            }, {
+                                icon: <i className="ri-eye-line ri-xl"></i>,
+                                value: !isEmpty(totalOrders) ? formatNumber(totalOrders) : '-',
+                                name: 'Total orders placed',
+                            }]}
                         />
                     </TabPanel>
 
+
                 </div>
+                {totalUserRows > 0 && !isEmpty(userRows) && <Grid gridProps={{
+                    columns,
+                    getRowHeight: () => ROW_HEIGHT,
+                    pageSize: PAGE_SIZE,
+                    loading: isGridLoading,
+                    onPageChange: setPageNumber,
+                    onRowClick: (params) => {
+                        // setClickedRow(rows.find((row) => row.id === params.row.id));
+                    },
+                    onSortModelChange: setSortModel,
+                    page: pageNumber,
+                    rowCount: totalUserRows,
+                    rows: userRows,
+                    sortModel,
+                }}/>}
             </section>
         </div>
     );

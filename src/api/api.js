@@ -41,11 +41,11 @@ export async function getDashboardLinkMetrics() {
     }
 }
 
-export async function getUsers() {
+export async function getUsers({limit, offset}) {
     const api = getBasicAuthInstance(
         process.env.REACT_APP_CLIENT_ID_DEV3, process.env.REACT_APP_CLIENT_SECRET_DEV3, 'https://api3.dev.insightiq.ai');
     try {
-        const response = await api.get(`v1/measurement/users`);
+        const response = await api.get(`v1/measurement/users?list_anonymous_users=true&list_users_with_no_events=true&limit=${limit}&offset=${offset}`);
         return response.data;
     } catch (error) {
         console.log(error);
