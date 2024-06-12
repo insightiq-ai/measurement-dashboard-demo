@@ -1,5 +1,5 @@
 import React from 'react';
-import { PerformanceMetric } from "../index";
+import { PerformanceMetric } from "../../index";
 import './RightMetrics.scss';
 
 export default function RightMetrics({ rightMetrics }) {
