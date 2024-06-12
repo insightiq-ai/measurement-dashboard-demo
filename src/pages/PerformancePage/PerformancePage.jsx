@@ -7,8 +7,10 @@ import TabPanel from "../../components/TabSwitch/TabPanel";
 import { getAttributionStatistics, getDashboardLinkMetrics, getPromocodeAnalytics, getUsers } from "../../api/api";
 import { currencyFormatter, formatNumber, isEmpty, percentFormatter } from "../../utils/util";
 import UtmLinksMetrics from "../../components/UtmLinksComponents/UtmLinksMetrics/UtmLinksMetrics";
-import Grid from "../../components/Grid/Grid";
-import { getSortedHeaderClass } from "../../utils/DataGridUtils";
+import { CustomFooter, getSortedHeaderClass } from "../../utils/DataGridUtils";
+import { DataGrid } from "@mui/x-data-grid";
+import { Colors } from "../../styles/colors";
+import Grid from '../../components/Grid/Grid';
 
 export default function PerformancePage(props) {
     const [analytics, setAnalytics] = useState(null);
@@ -111,7 +113,7 @@ export default function PerformancePage(props) {
         }).finally(() => {
             setGridLoading(false);
         });
-    }, [sortModel, pageNumber]);
+    }, []);
 
     useEffect(() => {
         if (!isEmpty(attributionStatistics)) {
@@ -126,27 +128,27 @@ export default function PerformancePage(props) {
 
     function renderIdCell(params) {
         const id = params.row['id'];
-        return id;
+        return <p>{id}</p>;
     }
 
     function renderEventsCell(params) {
         const number_of_events = params.row['number_of_events'];
-        return number_of_events;
+        return <p>{number_of_events}</p>;
     }
 
     function renderTotalSalesCell(params) {
         const id = params.row['id'];
-        return id;
+        return <p>{id}</p>;
     }
 
     function renderDeviceCountCell(params) {
         const number_of_fingerprints = params.row['number_of_fingerprints'];
-        return number_of_fingerprints;
+        return <p>{number_of_fingerprints}</p>;
     }
 
     function renderLastActiveCell(params) {
         const updated_at = params.row['updated_at'];
-        return updated_at;
+        return <p>{updated_at}</p>;
     }
 
     const columns = [
@@ -158,6 +160,7 @@ export default function PerformancePage(props) {
             headerName: 'User ID',
             renderCell: renderIdCell,
             sortable: false,
+            flex: 1,
         },
         {
             ...commonHeaderProps,
@@ -168,35 +171,37 @@ export default function PerformancePage(props) {
             renderCell: renderEventsCell,
             sortable: false,
         },
-        {
-            ...commonHeaderProps,
-            align: 'left',
-            field: 'id',
-            headerAlign: 'left',
-            headerName: 'Total sales',
-            renderCell: renderTotalSalesCell,
-            sortable: false,
-        },
-        {
-            ...commonHeaderProps,
-            align: 'right',
-            field: 'number_of_fingerprints',
-            headerAlign: 'right',
-            headerName: 'Device count',
-            renderCell: renderDeviceCountCell,
-            sortable: false,
-        },
-        {
-            ...commonHeaderProps,
-            align: 'left',
-            field: 'updated_at',
-            headerAlign: 'left',
-            headerName: 'Last active on',
-            renderCell: renderLastActiveCell,
-            headerClassName: `${commonHeaderProps.headerClassName} ${getSortedHeaderClass(sortModel, 'updated_at')}`,
-            sortable: false,
-        }
+        // {
+        //     ...commonHeaderProps,
+        //     align: 'left',
+        //     field: 'id',
+        //     headerAlign: 'left',
+        //     headerName: 'Total sales',
+        //     renderCell: renderTotalSalesCell,
+        //     sortable: false,
+        // },
+        // {
+        //     ...commonHeaderProps,
+        //     align: 'right',
+        //     field: 'number_of_fingerprints',
+        //     headerAlign: 'right',
+        //     headerName: 'Device count',
+        //     renderCell: renderDeviceCountCell,
+        //     sortable: false,
+        // },
+        // {
+        //     ...commonHeaderProps,
+        //     align: 'left',
+        //     field: 'updated_at',
+        //     headerAlign: 'left',
+        //     headerName: 'Last active on',
+        //     renderCell: renderLastActiveCell,
+        //     headerClassName: `${commonHeaderProps.headerClassName} ${getSortedHeaderClass(sortModel, 'updated_at')}`,
+        //     sortable: false,
+        // }
     ];
+    const allowedSorts = ["desc", "asc"];
+
 
     return (
         <div className={'div-performance-page'}>
@@ -297,6 +302,50 @@ export default function PerformancePage(props) {
 
 
                 </div>
+                {/*{totalUserRows > 0 && !isEmpty(userRows) ? <div className={"grid-container"}*/}
+                {/*    // style={{ height: `${dataGridHeight}px` }}*/}
+                {/*>*/}
+                {/*    <DataGrid*/}
+                {/*        className={"mui-data-grid"}*/}
+                {/*        components={{*/}
+                {/*            Footer: (props) => <CustomFooter totalRows={totalUserRows} pageSize={PAGE_SIZE}*/}
+                {/*                                             handlePageChange={setPageNumber} pageNumber={pageNumber}/>,*/}
+                {/*        }}*/}
+                {/*        disableColumnMenu*/}
+                {/*        disableSelectionOnClick*/}
+                {/*        getRowId={(row) => row.id}*/}
+                {/*        initialState={{*/}
+                {/*            sorting: { sortModel },*/}
+                {/*        }}*/}
+                {/*        pagination*/}
+                {/*        paginationMode={"server"}*/}
+                {/*        sortingMode={"server"}*/}
+                {/*        sortingOrder={allowedSorts}*/}
+                {/*        sx={{*/}
+                {/*            '& .hideRightSeparator > .MuiDataGrid-columnSeparator': {*/}
+                {/*                display: 'none',*/}
+                {/*            }*/}
+                {/*        }}*/}
+                {/*        localeText={{*/}
+                {/*            noRowsLabel: (*/}
+                {/*                <span className={"body-m"} style={{ color: Colors.neutralsSecondaryGrey }}>*/}
+                {/*            {"No users found"}*/}
+                {/*        </span>*/}
+                {/*            ),*/}
+                {/*        }}*/}
+                {/*        columns={columns}*/}
+                {/*        getRowHeight={() => ROW_HEIGHT}*/}
+                {/*        pageSize={PAGE_SIZE}*/}
+                {/*        loading={isGridLoading}*/}
+                {/*        onPageChange={setPageNumber}*/}
+                {/*        page={pageNumber}*/}
+                {/*        rowCount={totalUserRows}*/}
+                {/*        rows={userRows}*/}
+                {/*        sortModel={sortModel}*/}
+                {/*        onSortModelChange={setSortModel}*/}
+                {/*    />*/}
+                {/*</div> : null}*/}
+
                 {totalUserRows > 0 && !isEmpty(userRows) && <Grid gridProps={{
                     columns,
                     getRowHeight: () => ROW_HEIGHT,

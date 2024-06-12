@@ -28,7 +28,7 @@ export default function Grid({ gridProps }) {
 
     return (
         <div className={"grid-container"}
-             // style={{ height: `${dataGridHeight}px` }}
+             style={{ height: `${dataGridHeight}px` }}
         >
             <DataGrid
                 className={"mui-data-grid"}
