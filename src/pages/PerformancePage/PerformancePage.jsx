@@ -4,12 +4,13 @@ import PageMetrics from "../../components/PageMetrics/PageMetrics";
 import { TabSwitch } from "../../components";
 import { SUMMARY, UTM_LINKS } from "../../utils/constants";
 import TabPanel from "../../components/TabSwitch/TabPanel";
-import { getAttributionStatistics, getPromocodeAnalytics } from "../../api/api";
-import { percentFormatter, currencyFormatter, formatNumber } from "../../utils/util";
+import { getAttributionStatistics, getDashboardLinkMetrics, getPromocodeAnalytics } from "../../api/api";
+import { percentFormatter, currencyFormatter, formatNumber, isEmpty } from "../../utils/util";
 
 export default function PerformancePage(props) {
     const [analytics, setAnalytics] = useState(null);
     const [attributionStatistics, setAttributionStatistics] = useState(null);
+    const [dashboardLinkMetrics, setDashboardLinkMetrics] = useState(null);
     const TOTAL_CREATOR_COST = 2000;
     const NUMBER_OF_CREATORS = 3;
 
@@ -26,10 +27,11 @@ export default function PerformancePage(props) {
             setAttributionStatistics(res);
         });
 
-        // getDashboardLinkMetrics().then((res) => {
-        //     console.log(`getDashboardLinkMetrics`);
-        //     console.log(res);
-        // });
+        getDashboardLinkMetrics().then((res) => {
+            console.log(`getDashboardLinkMetrics`);
+            console.log(res);
+            setDashboardLinkMetrics(res);
+        });
         //
         // getUsers().then((res) => {
         //     console.log(`getUsers`);
@@ -56,18 +58,24 @@ export default function PerformancePage(props) {
         },
     ];
 
-    // Calculations
+    // Calculations - Summary
     const { order_summary } = analytics || {};
-    const totalSales = order_summary?.total_orders_amount_fulfilled;
+    const totalSales = order_summary ? order_summary.total_orders_amount_fulfilled : null;
     const totalCreatorCost = TOTAL_CREATOR_COST;
     const averageCreatorCost = totalCreatorCost / NUMBER_OF_CREATORS;
-    const totalRoi = totalCreatorCost !== 0 ? totalSales / totalCreatorCost : null;
-    const totalEventsCaptured = attributionStatistics?.number_of_events;
-    const totalOrders = order_summary?.total_orders;
-    const totalUsers = attributionStatistics?.number_of_users;
-    const averageEventsPerUser = totalUsers !== 0 ? totalEventsCaptured / totalUsers : null;
-    const averageOrdersPerUser = totalUsers !== 0 ? totalOrders / totalUsers : null;
-    const averageSalesPerUser = totalSales / totalUsers;
+    const totalRoi = (totalCreatorCost !== 0) ? totalSales / totalCreatorCost : null;
+    const totalEventsCaptured = attributionStatistics ? attributionStatistics.number_of_events : null;
+    const totalOrders = !isEmpty(order_summary) ? order_summary.total_orders : null;
+    const totalUsers = !isEmpty(attributionStatistics) ? attributionStatistics.number_of_users : null;
+    const averageEventsPerUser = (!isEmpty(totalUsers) && totalUsers !== 0) ? totalEventsCaptured / totalUsers : null;
+    const averageOrdersPerUser = (!isEmpty(totalUsers) && totalUsers !== 0) ? totalOrders / totalUsers : null;
+    const averageSalesPerUser = (!isEmpty(totalUsers) && totalUsers !== 0) ? totalSales / totalUsers : null;
+
+    // Calculations - UTM Links
+    const totalLinkClicks = !isEmpty(dashboardLinkMetrics) ? dashboardLinkMetrics.total_clicks : null;
+    const landingPageViews = attributionStatistics ? attributionStatistics.number_of_sessions : null;
+    const clickThroughRate = (!isEmpty(landingPageViews) && landingPageViews !== 0) ? totalLinkClicks / landingPageViews : null;
+    const costPerLpv = (!isEmpty(totalCreatorCost) && totalCreatorCost !== 0) ? totalCreatorCost / landingPageViews : null;
 
     return (
         <div className={'div-performance-page'}>
@@ -91,44 +99,48 @@ export default function PerformancePage(props) {
                         <PageMetrics
                             leftMetrics={{
                                 mainMetric: {
-                                    value: percentFormatter.format(totalRoi),
+                                    value: !isEmpty(totalRoi) ? percentFormatter.format(totalRoi) : '-',
                                     title: 'Total ROI'
                                 },
                                 subMetrics: [{
                                     icon: <i className="ri-money-dollar-circle-line metric-icon"></i>,
-                                    value: currencyFormatter.format(totalSales),
+                                    value: !isEmpty(totalSales) ? currencyFormatter.format(totalSales) : '-',
                                     name: 'Total Sales',
-                                    subtitle: `${currencyFormatter.format(averageSalesPerUser)} average sales per user`,
+                                    subtitle: `${!isEmpty(averageSalesPerUser) ? currencyFormatter.format(averageSalesPerUser) : '-'} average sales per user`,
                                     tooltip: 'Total revenue generated by the company'
                                 }, {
                                     icon: <i className="ri-money-dollar-circle-line metric-icon"></i>,
                                     value: currencyFormatter.format(totalCreatorCost),
                                     name: 'Total creator cost',
-                                    subtitle: `${currencyFormatter.format(averageCreatorCost)} average creator cost`,
+                                    subtitle: `${!isEmpty(averageCreatorCost) ? currencyFormatter.format(averageCreatorCost) : '-'} average creator cost`,
                                     tooltip: 'Total sales generated by the company'
                                 }]
                             }}
                             rightMetrics={[{
                                 icon: <i className="ri-money-dollar-circle-line metric-icon"></i>,
-                                value: formatNumber(totalEventsCaptured),
+                                value: !isEmpty(totalEventsCaptured) ? formatNumber(totalEventsCaptured) : '-',
                                 name: 'Total events captured',
-                                subtitle: `${formatNumber(averageEventsPerUser)} average events per user`,
+                                subtitle: `${!isEmpty(averageEventsPerUser) ? formatNumber(averageEventsPerUser) : '-'} average events per user`,
                                 tooltip: 'Total revenue generated by the company'
                             }, {
                                 icon: <i className="ri-money-dollar-circle-line metric-icon"></i>,
-                                value: formatNumber(totalOrders),
+                                value: !isEmpty(totalOrders) ? formatNumber(totalOrders) : '-',
                                 name: 'Total orders',
-                                subtitle: `${formatNumber(averageOrdersPerUser)} average orders per user`,
+                                subtitle: `${!isEmpty(averageOrdersPerUser) ? formatNumber(averageOrdersPerUser) : '-'} average orders per user`,
                                 tooltip: 'Total sales generated by the company'
                             }, {
                                 icon: <i className="ri-money-dollar-circle-line metric-icon"></i>,
-                                value: totalUsers,
+                                value: !isEmpty(totalUsers) ? totalUsers : '-',
                                 name: 'Total users',
                                 tooltip: 'Total sales generated by the company'
                             }]}
                         />
                     </TabPanel>
                     <TabPanel index={UTM_LINKS} value={currentTab}>
+                        {/*<p>{totalLinkClicks}</p>*/}
+                        {/*<p>{landingPageViews}</p>*/}
+                        {/*<p>{clickThroughRate}</p>*/}
+                        {/*<p>{costPerLpv}</p>*/}
                     </TabPanel>
 
                 </div>
