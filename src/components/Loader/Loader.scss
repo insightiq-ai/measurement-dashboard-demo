@@ -1,0 +1,23 @@
+.loader-container {
+  width: 80vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.loader-icon {
+  // transform-origin: center center;
+  height: 80px;
+  animation-duration: 1s;
+  animation-name: rotate;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-out;
+  @keyframes rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}

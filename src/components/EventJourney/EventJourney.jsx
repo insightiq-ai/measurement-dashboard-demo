@@ -4,6 +4,7 @@ import "./EventJourney.scss";
 import { isEmpty, convertTimeToLocale } from "../../utils/util";
 
 const ListComponent = ({ userEvent }) => {
+  // TODO: Add dynamic creator mapping from utm_source
   const isCreatorPresent = userEvent.utm_source ?? false;
   const storeLink = !isEmpty(userEvent.window_location) ? userEvent.window_location : "-";
   const deviceDetails = userEvent.device_details.device ?? "iPhone 15";
@@ -53,7 +54,6 @@ const ListComponent = ({ userEvent }) => {
 };
 
 export default function EventJourney({ userEvents }) {
-  console.log("userEvents", userEvents);
   return (
     <div className="event-journey-list-container">{userEvents && userEvents.map((userEvent, index) => <ListComponent userEvent={userEvent} />)}</div>
   );
