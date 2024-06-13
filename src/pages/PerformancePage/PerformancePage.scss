@@ -1,6 +1,9 @@
 @import "../../styles/insightIq.scss";
 
 .div-performance-page {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
   padding-top: 49px;
   padding-bottom: 86px;
 

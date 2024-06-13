@@ -210,7 +210,7 @@ export default function PerformancePage(props) {
 
     return (
         <div className={'div-performance-page'}>
-            <section className={'section-metrics'}>
+            <div className={'section-metrics'}>
                 <div className={'div-page-title'}>
                     <span className={'section-heading'}>Performance</span>
                     <TabSwitch
@@ -223,8 +223,6 @@ export default function PerformancePage(props) {
                         width={224}
                     />
                 </div>
-
-
                 <div>
                     <TabPanel index={SUMMARY} value={currentTab}>
                         <SummaryMetrics
@@ -307,23 +305,24 @@ export default function PerformancePage(props) {
 
 
                 </div>
-                <Grid gridProps={{
-                    columns,
-                    getRowHeight: () => ROW_HEIGHT,
-                    pageSize: PAGE_SIZE,
-                    loading: isGridLoading,
-                    onPageChange: setPageNumber,
-                    onRowClick: (params) => {
-                        navigate(`/user-journey/${params.row.id}`);
-                        // setClickedRow(rows.find((row) => row.id === params.row.id));
-                    },
-                    onSortModelChange: setSortModel,
-                    page: pageNumber,
-                    rowCount: totalUserRows,
-                    rows: userRows,
-                    sortModel,
-                }}/>
-            </section>
+            </div>
+            <div>Tab bar here</div>
+            <Grid gridProps={{
+                columns,
+                getRowHeight: () => ROW_HEIGHT,
+                pageSize: PAGE_SIZE,
+                loading: isGridLoading,
+                onPageChange: setPageNumber,
+                onRowClick: (params) => {
+                    navigate(`/user-journey/${params.row.id}`);
+                    // setClickedRow(rows.find((row) => row.id === params.row.id));
+                },
+                onSortModelChange: setSortModel,
+                page: pageNumber,
+                rowCount: totalUserRows,
+                rows: userRows,
+                sortModel,
+            }}/>
         </div>
     );
 }
