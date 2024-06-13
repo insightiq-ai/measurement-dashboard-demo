@@ -115,6 +115,7 @@ export async function getTotalOrderPerAUID(auid) {
   myHeaders.append("API-TYPE", "AUID2ORDERDETAILS");
   myHeaders.append("AUID", auid);
   myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("x-cors-api-key", process.env.REACT_APP_CORSSH_TOKEN);
 
   var raw = JSON.stringify({});
 

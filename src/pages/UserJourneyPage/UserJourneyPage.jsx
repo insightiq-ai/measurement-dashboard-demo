@@ -28,8 +28,7 @@ export default function UserJourneyPage() {
       console.log(res);
       setUserEvents(res?.data);
     });
-    getTotalOrderPerAUID("78224cfe-15d1-4cfa-a4b3-a612625ff557").then((res) => {
-      debugger;
+    getTotalOrderPerAUID(userId).then((res) => {
       setTotalOrderValuePerUser(!isEmpty(res?.summaries[0].order_total) ? res?.summaries[0].order_total : null);
       setOrdersPlaced(!isEmpty(res?.summaries[0].number_of_orders) ? res?.summaries[0].number_of_orders : null);
     });
