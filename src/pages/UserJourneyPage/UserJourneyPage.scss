@@ -1,0 +1,27 @@
+.div-user-journey-page {
+  display: flex;
+  flex-direction: column;
+  //padding-left: 157px;
+  //padding-right: 157px;
+  padding-bottom: 128px;
+  width: 1126px;
+  gap: 48px;
+
+  .div-back-container {
+    display: flex;
+    width: 1439px;
+    padding-top: 40px;
+    padding-bottom: 24px;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .div-top-container-user-journey {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 49px;
+  }
+}
+
+

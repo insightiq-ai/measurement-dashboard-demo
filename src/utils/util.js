@@ -1,3 +1,5 @@
+import moment from 'moment-timezone';
+
 export const isEmpty = (value) => {
     return (
         value === undefined ||
@@ -60,3 +62,16 @@ export function formatNumber(num, decimalPrecision = 2) {
     base = abbRev.indexOf(suffix) + 1;
     return suffix ? rnd(num / 1000 ** base, decimalPrecision) + suffix : "" + Math.round((num + Number.EPSILON) * 100) / 100;
 }
+
+const DATE_TIME_FORMAT = "DD MMM YYYY, hh:mm A";
+// function to add +00:00 in time adn return local time
+export const convertTimeToLocale = (time, dateTimeFormat = DATE_TIME_FORMAT) => {
+    if (!time || typeof time !== "string") {
+        return time;
+    }
+    let updatedTime = time;
+    if (time?.slice(-6) !== "+00:00") {
+        updatedTime = `${time}+00:00`;
+    }
+    return moment(updatedTime).format(dateTimeFormat);
+};

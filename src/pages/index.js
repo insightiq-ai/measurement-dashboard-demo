@@ -1,2 +1,3 @@
 import PerformancePage from './PerformancePage/PerformancePage.jsx';
-export {PerformancePage};
+import UserJourneyPage from './UserJourneyPage/UserJourneyPage.jsx';
+export {PerformancePage, UserJourneyPage};

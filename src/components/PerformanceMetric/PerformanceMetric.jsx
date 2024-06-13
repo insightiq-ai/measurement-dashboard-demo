@@ -5,7 +5,7 @@ import * as PropTypes from "prop-types";
 import { isEmpty } from "../../utils/util";
 // variant  -> See propTypes below
 
-export default function PerformanceMetric({ variant, metricIcon, content, metricName, tooltip, subtitle }) {
+export default function PerformanceMetric({ variant, metricIcon, content, metricName, tooltip, subtitle, additionalStyles }) {
 
     if (content === "null" || content === null) {
         content = "-"
@@ -31,9 +31,9 @@ export default function PerformanceMetric({ variant, metricIcon, content, metric
                 <div className='metric-content'>{metricIcon}{content}</div>
                 <div className='info-name-container'>
                     {metricName}
-                    <Tooltip placement='right-end' title={tooltip}>
+                    {tooltip && <Tooltip placement='right-end' title={tooltip}>
                         <i className="ri-information-line info-icon"></i>
-                    </Tooltip>
+                    </Tooltip>}
                 </div>
             </div>
         )
@@ -80,7 +80,7 @@ export default function PerformanceMetric({ variant, metricIcon, content, metric
         </div>);
     }
 
-    return <div className={'performance-metric'}>{performanceMetric}</div>;
+    return <div className={'performance-metric'} style={additionalStyles}>{performanceMetric}</div>;
 }
 
 PerformanceMetric.propTypes = {
