@@ -1,28 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { convertTimeToLocale, formatNumber, isEmpty } from "../../../utils/util";
-import { getUserById, getUserEvents } from "../../../api/api";
 import { PerformanceMetric } from "../../index";
 import './AggregateMetrics.scss';
 
-export default function AggregateMetrics({ userId }) {
-    const [totalEventsCollected, setTotalEventsCollected] = useState('-');
-    const [deviceCount, setDeviceCount] = useState('-');
-    const [lastActiveOn, setLastActiveOn] = useState('-');
-    useEffect(() => {
-        if (!isEmpty(userId)) {
-            getUserById({ userId }).then((res) => {
-                console.log(`getUserById`);
-                console.log(res);
-                !isEmpty(res?.number_of_events) && setTotalEventsCollected(formatNumber(res?.number_of_events));
-                !isEmpty(res?.number_of_fingerprints) && setDeviceCount(formatNumber(res?.number_of_fingerprints));
-            });
-            getUserEvents({ userId, limit: 1 }).then((res) => {
-                console.log(`getUserEvents`);
-                console.log(res);
-                !isEmpty(res?.data[0]?.event_timestamp) && setLastActiveOn(convertTimeToLocale(res?.data[0]?.event_timestamp));
-            });
-        }
-    }, [userId]);
+export default function AggregateMetrics({ user, userEvents }) {
+    const totalEventsCollected = !isEmpty(user?.number_of_events) ? formatNumber(user?.number_of_events) : '-';
+    const deviceCount = !isEmpty(user?.number_of_fingerprints) ? formatNumber(user?.number_of_fingerprints) : '-';
+    const lastActiveOn = !isEmpty(userEvents?.event_timestamp) ? convertTimeToLocale(userEvents?.event_timestamp) : '-';
+
     return (
         <div className={'div-aggregate-metrics'}>
             <PerformanceMetric
@@ -45,7 +30,7 @@ export default function AggregateMetrics({ userId }) {
                 metricIcon={<i className="ri-computer-line"></i>}
                 content={lastActiveOn}
                 metricName={'Last active on'}
-                additionalStyles={{width: 'unset'}}
+                additionalStyles={{ width: 'unset' }}
             />
         </div>
     );
