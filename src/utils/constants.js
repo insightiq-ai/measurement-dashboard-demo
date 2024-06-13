@@ -4,6 +4,8 @@ import {currencyFormatter} from './util'
 
 export const SUMMARY = 'Summary';
 export const UTM_LINKS = 'UTM links';
+export const ALL_USERS = 'All users';
+export const CREATORS = 'Creators';
 
 export const TOTAL_CREATOR_COST = 2000;
 export const NUMBER_OF_CREATORS = 3;

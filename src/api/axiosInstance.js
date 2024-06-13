@@ -20,6 +20,15 @@ const getBasicAuthInstance = (CLIENT_ID, CLIENT_SECRET, environmentBaseURL) => {
   });
   return basicAuthInstance;
 };
+const getShopifyAuthInstance = (baseURL) => {
+  const authInstance = axios.create({
+    baseURL: baseURL,
+    headers: {
+      "X-Shopify-Access-Token": process.env.REACT_APP_SHOPIFY_ACCESS_TOKEN,
+    },
+  });
+  return authInstance;
+};
 // const environmentBaseInstance = axios.create({
 //   baseURL: envBaseUrl,
 //   headers: {
@@ -96,6 +105,7 @@ const attachAxiosInterceptors = () => {
 
 export { attachAxiosInterceptors };
 export { getBasicAuthInstance };
+export { getShopifyAuthInstance };
 //export { environmentBaseInstance, attachAxiosInterceptors };
 
 export default instance;
