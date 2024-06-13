@@ -25,7 +25,7 @@ const getShopifyAuthInstance = (baseURL) => {
     baseURL: baseURL,
     headers: {
       "X-Shopify-Access-Token": process.env.REACT_APP_SHOPIFY_ACCESS_TOKEN,
-      "x-cors-api-key": "temp_92c6c5650195dd80a8de8210341c454e",
+      "x-cors-api-key": process.env.REACT_APP_CORSSH_TOKEN,
     },
   });
   return authInstance;
