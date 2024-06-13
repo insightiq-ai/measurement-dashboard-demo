@@ -121,15 +121,6 @@ export default function PerformancePage(props) {
         }
     }, [attributionStatistics]);
 
-    useEffect(() => {
-        getAllOrdersFromShopify().then((res) => {
-            setTotalOrderCount(res.count);
-        });
-        getCountOfAbondonedCheckout().then((res) => {
-            setTotalAbondonedCheckouts(res.checkouts.length);
-        });
-    }, []);
-
     const commonHeaderProps = {
         flex: 1,
         headerClassName: "subtitle-m mui-data-grid-header hideRightSeparator",
