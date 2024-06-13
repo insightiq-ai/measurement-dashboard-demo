@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import './UserJourneyPage.scss';
+import React, { useEffect, useState } from "react";
+import "./UserJourneyPage.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import AggregateMetrics from "../../components/UserJourneyComponents/AggregateMetrics/AggregateMetrics";
-import { getUserById, getUserEvents } from "../../api/api";
-import { currencyFormatter } from "../../utils/util";
+import { getTotalOrderPerAUID, getUserById, getUserEvents } from "../../api/api";
+import { isEmpty } from "../../utils/util";
 import UserMetrics from "../../components/UserJourneyComponents/UserMetrics/UserMetrics";
 import { Icons } from "../../components";
-import { TOTAL_CREATOR_COST } from "../../utils/constants";
 
 export default function UserJourneyPage() {
     const navigate = useNavigate();
@@ -14,41 +13,34 @@ export default function UserJourneyPage() {
     const [user, setUser] = useState(null);
     const [userEvents, setUserEvents] = useState([]);
     // Populate these values from the Hasura API
-    const [totalOrderValue, setTotalOrderValue] = useState(TOTAL_CREATOR_COST);
-    const [ordersPlaced, setOrdersPlaced] = useState(20);
+    const [totalOrderValuePerUser, setTotalOrderValuePerUser] = useState(null);
+    const [ordersPlaced, setOrdersPlaced] = useState(null);
 
     useEffect(() => {
-        getUserById({ userId }).then((res) => {
-            console.log(`getUserById`);
-            console.log(res);
-            setUser(res);
-        });
-        getUserEvents({ userId, limit: 1 }).then((res) => {
-            console.log(`getUserEvents`);
-            console.log(res);
-            setUserEvents(res?.data);
+        getUserById({ userId }).then(setUser);
+        getUserEvents({ userId, limit: 1 }).then(setUserEvents);
+        getTotalOrderPerAUID("78224cfe-15d1-4cfa-a4b3-a612625ff557").then((res) => {
+            setTotalOrderValuePerUser(!isEmpty(res?.summaries[0].order_total) ? res?.summaries[0].order_total : null);
+            setOrdersPlaced(!isEmpty(res?.summaries[0].number_of_orders) ? res?.summaries[0].number_of_orders : null);
         });
     }, [userId]);
 
     function countUtmMediums(data) {
         const mediumCounts = {
-            'YouTube': 0,
-            'TikTok': 0,
-            'Instagram': 0,
-            'Twitter': 0
+            YouTube: 0,
+            TikTok: 0,
+            Instagram: 0,
+            Twitter: 0,
         };
 
-        data.forEach(item => {
+        data.forEach((item) => {
             const medium = item.utm_medium;
             const normalizedMedium = medium?.toLowerCase();
 
-            if (normalizedMedium === 'youtube' ||
-                normalizedMedium === 'tiktok' ||
-                normalizedMedium === 'instagram' ||
-                normalizedMedium === 'twitter') {
+            if (normalizedMedium === "youtube" || normalizedMedium === "tiktok" || normalizedMedium === "instagram" || normalizedMedium === "twitter") {
                 mediumCounts[medium]++;
-            } else if (normalizedMedium === 'x') {
-                mediumCounts['Twitter']++;  // Assuming 'X' counts as 'Twitter' based on previous context
+            } else if (normalizedMedium === "x") {
+                mediumCounts["Twitter"]++; // Assuming 'X' counts as 'Twitter' based on previous context
             }
         });
 
@@ -61,10 +53,10 @@ export default function UserJourneyPage() {
         const mediumWeights = [];
 
         const iconMapping = {
-            'YouTube': <Icons.youtube_demo/>,
-            'TikTok': <Icons.twitter_demo/>,
-            'Instagram': <Icons.instagram_demo/>,
-            'Twitter': <Icons.twitter_demo/>,
+            YouTube: <Icons.youtube_demo/>,
+            TikTok: <Icons.twitter_demo/>,
+            Instagram: <Icons.instagram_demo/>,
+            Twitter: <Icons.twitter_demo/>,
         };
 
         for (const medium in mediumCounts) {
@@ -99,11 +91,10 @@ export default function UserJourneyPage() {
                 <AggregateMetrics user={user} userEvents={userEvents[0]}/>
                 <UserMetrics
                     user={user}
-                    platformSplit={splitOrderValueByMedium(userEvents, totalOrderValue)}
+                    platformSplit={splitOrderValueByMedium(userEvents, totalOrderValuePerUser)}
                     ordersPlaced={ordersPlaced}
-                    totalOrderValue={totalOrderValue}/>
+                    totalOrderValue={totalOrderValuePerUser}/>
             </div>
         </div>
-    )
-
+    );
 }

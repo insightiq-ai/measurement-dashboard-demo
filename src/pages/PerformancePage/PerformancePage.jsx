@@ -1,29 +1,36 @@
-import React, { useEffect, useState } from 'react';
-import './PerformancePage.scss';
+import React, { useEffect, useState } from "react";
+import "./PerformancePage.scss";
 import SummaryMetrics from "../../components/SummaryComponents/SummaryMetrics/SummaryMetrics";
 import { TabSwitch } from "../../components";
-import { ALL_USERS, CREATORS, NUMBER_OF_CREATORS, SUMMARY, TOTAL_CREATOR_COST, UTM_LINKS } from "../../utils/constants";
+import { ALL_USERS, CREATORS, SUMMARY, UTM_LINKS } from "../../utils/constants";
 import TabPanel from "../../components/TabSwitch/TabPanel";
 import {
+    getAllOrdersFromShopify,
     getAttributionStatistics,
+    getCountOfAbondonedCheckout,
     getCreatorsData,
     getDashboardLinkMetrics,
     getPromocodeAnalytics,
-    getUsers
+    getUsers,
 } from "../../api/api";
 import { convertTimeToLocale, currencyFormatter, formatNumber, isEmpty, percentFormatter } from "../../utils/util";
 import UtmLinksMetrics from "../../components/UtmLinksComponents/UtmLinksMetrics/UtmLinksMetrics";
 import Grid from '../../components/Grid/Grid';
-import { useNavigate } from "react-router-dom";
-import { DataGrid } from "@mui/x-data-grid";
 import { CustomFooter, getSortedHeaderClass } from "../../utils/DataGridUtils";
-import {Colors} from '../../styles/colors';
+import { DataGrid } from "@mui/x-data-grid";
+import { Colors } from "../../styles/colors";
+import { useNavigate } from "react-router-dom";
 
 export default function PerformancePage(props) {
     const [analytics, setAnalytics] = useState(null);
     const [attributionStatistics, setAttributionStatistics] = useState(null);
     const [dashboardLinkMetrics, setDashboardLinkMetrics] = useState(null);
+    const [totalOrderCount, setTotalOrderCount] = useState(null);
+    const [totalAbondonedCheckouts, setTotalAbondonedCheckouts] = useState(null);
     const navigate = useNavigate();
+
+    const TOTAL_CREATOR_COST = 2000;
+    const NUMBER_OF_CREATORS = 3;
 
     const [currentTab, setCurrentTab] = useState(SUMMARY);
     const tabs = [
@@ -37,9 +44,10 @@ export default function PerformancePage(props) {
     const tableViewTabs = [
         {
             label: ALL_USERS,
-        }, {
+        },
+        {
             label: CREATORS,
-        }
+        },
     ];
     const [tableViewCurrTab, setTableViewCurrTab] = useState(ALL_USERS);
 
@@ -48,21 +56,21 @@ export default function PerformancePage(props) {
     const totalSales = order_summary ? order_summary.total_orders_amount_fulfilled : null;
     const totalCreatorCost = TOTAL_CREATOR_COST;
     const averageCreatorCost = totalCreatorCost / NUMBER_OF_CREATORS;
-    const totalRoi = (totalCreatorCost !== 0) ? totalSales / totalCreatorCost : null;
+    const totalRoi = totalCreatorCost !== 0 ? totalSales / totalCreatorCost : null;
     const totalEventsCaptured = attributionStatistics ? attributionStatistics.number_of_events : null;
     const totalOrders = !isEmpty(order_summary) ? order_summary.total_orders : null;
     const totalUsers = !isEmpty(attributionStatistics) ? attributionStatistics.number_of_users : null;
-    const averageEventsPerUser = (!isEmpty(totalUsers) && totalUsers !== 0) ? totalEventsCaptured / totalUsers : null;
-    const averageOrdersPerUser = (!isEmpty(totalUsers) && totalUsers !== 0) ? totalOrders / totalUsers : null;
-    const averageSalesPerUser = (!isEmpty(totalUsers) && totalUsers !== 0) ? totalSales / totalUsers : null;
+    const averageEventsPerUser = !isEmpty(totalUsers) && totalUsers !== 0 ? totalEventsCaptured / totalUsers : null;
+    const averageOrdersPerUser = !isEmpty(totalUsers) && totalUsers !== 0 ? totalOrders / totalUsers : null;
+    const averageSalesPerUser = !isEmpty(totalUsers) && totalUsers !== 0 ? totalSales / totalUsers : null;
 
     // Calculations - UTM Links
     const totalLinkClicks = !isEmpty(dashboardLinkMetrics) ? dashboardLinkMetrics.total_clicks : null;
     const landingPageViews = attributionStatistics ? attributionStatistics.number_of_sessions : null;
-    const clickThroughRate = (!isEmpty(landingPageViews) && landingPageViews !== 0) ? totalLinkClicks / landingPageViews : null;
-    const costPerLpv = (!isEmpty(totalCreatorCost) && totalCreatorCost !== 0) ? totalCreatorCost / landingPageViews : null;
-    const addToCarts = null;
-    const checkoutsInitiated = null;
+    const clickThroughRate = !isEmpty(landingPageViews) && landingPageViews !== 0 ? totalLinkClicks / landingPageViews : null;
+    const costPerLpv = !isEmpty(totalCreatorCost) && totalCreatorCost !== 0 && landingPageViews !== 0 ? totalCreatorCost / landingPageViews : null;
+    const addToCarts = (totalOrderCount || 0) + (totalAbondonedCheckouts || 0);
+    const checkoutsInitiated = totalAbondonedCheckouts || 0;
 
 
     const ROW_HEIGHT = 100;
@@ -87,6 +95,12 @@ export default function PerformancePage(props) {
                 setTotalCreatorRows(res?.length);
             }
         });
+        getAllOrdersFromShopify().then((res) => {
+            setTotalOrderCount(res?.count);
+        });
+        getCountOfAbondonedCheckout().then((res) => {
+            setTotalAbondonedCheckouts(res?.checkouts?.length);
+        });
     }, []);
 
     useEffect(() => {
@@ -107,31 +121,40 @@ export default function PerformancePage(props) {
         }
     }, [attributionStatistics]);
 
+    useEffect(() => {
+        getAllOrdersFromShopify().then((res) => {
+            setTotalOrderCount(res.count);
+        });
+        getCountOfAbondonedCheckout().then((res) => {
+            setTotalAbondonedCheckouts(res.checkouts.length);
+        });
+    }, []);
+
     const commonHeaderProps = {
         flex: 1,
-        headerClassName: 'subtitle-m mui-data-grid-header hideRightSeparator',
+        headerClassName: "subtitle-m mui-data-grid-header hideRightSeparator",
     };
 
     // Users table
     function renderIdCell(params) {
-        const id = params.row['id'];
+        const id = params.row["id"];
         return id;
     }
 
     function renderEventsCell(params) {
-        const number_of_events = params.row['number_of_events'];
+        const number_of_events = params.row["number_of_events"];
         return number_of_events;
     }
 
     function renderDeviceCountCell(params) {
-        const number_of_fingerprints = params.row['number_of_fingerprints'];
+        const number_of_fingerprints = params.row["number_of_fingerprints"];
         return number_of_fingerprints;
     }
 
     function renderLastActiveCell(params) {
-        let date = params.row['event_timestamp'];
+        let date = params.row["event_timestamp"];
         if (date === undefined) {
-            date = params.row['updated_at'];
+            date = params.row["updated_at"];
         }
         return convertTimeToLocale(date);
     }
@@ -412,12 +435,14 @@ export default function PerformancePage(props) {
                             getRowHeight={() => 92}
                             pageSize={PAGE_SIZE}
                             page={0}
-                            onPageChange={() => {}}
+                            onPageChange={() => {
+                            }}
                             rowCount={totalCreatorRows}
                             className={"mui-data-grid"}
                             components={{
                                 Footer: (props) => <CustomFooter totalRows={totalCreatorRows} pageSize={PAGE_SIZE}
-                                                                 handlePageChange={() => {}} pageNumber={0}/>,
+                                                                 handlePageChange={() => {
+                                                                 }} pageNumber={0}/>,
                             }}
                             disableColumnMenu
                             disableSelectionOnClick
