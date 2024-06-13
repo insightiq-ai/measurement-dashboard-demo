@@ -313,45 +313,43 @@ export default function PerformancePage(props) {
                 </div>
             </div>
             <div>
-                <div className="page-tab-switch-main-div">
-                    <TabSwitch
-                        handleTabChange={(ev, value) => {
-                            setTableViewCurrTab(value);
-                        }}
-                        aria-label="icon position tabs example"
-                        currentTab={tableViewCurrTab}
-                        tabs={tableViewTabs}
-                        height="55px"
-                        width="fit-content"
-                        variant={"underline"}
-                    />
-                </div>
-                <div>
-                    <TabPanel index={ALL_USERS} value={tableViewCurrTab}
-                        sx={{ margin: "0px", padding: "0px" }}>
-                    </TabPanel>
-                    <TabPanel index={CREATORS} value={tableViewCurrTab}
-                        sx={{ margin: "0px", padding: "0px" }}>
-
-                    </TabPanel>
-                </div>
+            <div className='table-view-tab-switch-container' >
+                <TabSwitch
+                    handleTabChange={(ev, value) => {
+                        setTableViewCurrTab(value);
+                    }}
+                    aria-label="icon position tabs example"
+                    currentTab={tableViewCurrTab}
+                    tabs={tableViewTabs}
+                    height="55px"
+                    width="fit-content"
+                    variant={"underline"}
+                />
             </div>
-            <Grid gridProps={{
-                columns,
-                getRowHeight: () => ROW_HEIGHT,
-                pageSize: PAGE_SIZE,
-                loading: isGridLoading,
-                onPageChange: setPageNumber,
-                onRowClick: (params) => {
-                    navigate(`/user-journey/${params.row.id}`);
-                    // setClickedRow(rows.find((row) => row.id === params.row.id));
-                },
-                onSortModelChange: setSortModel,
-                page: pageNumber,
-                rowCount: totalUserRows,
-                rows: userRows,
-                sortModel,
-            }} />
+                <TabPanel index={ALL_USERS} value={tableViewCurrTab}
+                    sx={{ margin: "0px", padding: "0px" }}>
+                    <Grid gridProps={{
+                        columns,
+                        getRowHeight: () => ROW_HEIGHT,
+                        pageSize: PAGE_SIZE,
+                        loading: isGridLoading,
+                        onPageChange: setPageNumber,
+                        onRowClick: (params) => {
+                            navigate(`/user-journey/${params.row.id}`);
+                            // setClickedRow(rows.find((row) => row.id === params.row.id));
+                        },
+                        onSortModelChange: setSortModel,
+                        page: pageNumber,
+                        rowCount: totalUserRows,
+                        rows: userRows,
+                        sortModel,
+                    }} />
+                </TabPanel>
+                <TabPanel index={CREATORS} value={tableViewCurrTab}
+                    sx={{ margin: "0px", padding: "0px" }}>
+                    <div>Creators table here</div>
+                </TabPanel>
+            </div>
         </div>
     );
 }
