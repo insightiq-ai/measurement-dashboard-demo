@@ -89,7 +89,7 @@ export async function getUserEvents({ userId, limit }) {
 }
 
 export async function getAllOrdersFromShopify() {
-  const api = getShopifyAuthInstance("https://www.demoshoes.shop/admin/api/2023-10");
+  const api = getShopifyAuthInstance("https://proxy.cors.sh/https://www.demoshoes.shop/admin/api/2023-10");
   try {
     const response = await api.get(`/orders/count.json?status=any`);
     return response.data;
@@ -99,7 +99,7 @@ export async function getAllOrdersFromShopify() {
 }
 
 export async function getCountOfAbondonedCheckout() {
-  const api = getShopifyAuthInstance("https://www.demoshoes.shop/admin/api/2023-10");
+  const api = getShopifyAuthInstance("https://proxy.cors.sh/https://www.demoshoes.shop/admin/api/2023-10");
   try {
     const response = await api.get(`/checkouts.json`);
     return response.data;
@@ -109,6 +109,7 @@ export async function getCountOfAbondonedCheckout() {
 }
 
 export async function getTotalOrderPerAUID(auid) {
+  const url = "https://proxy.cors.sh/" + "https://orderops.demoshoes.shop";
   var myHeaders = new Headers();
   myHeaders.append("X-PHYLLO-PSK", "PHYLLOISKING");
   myHeaders.append("API-TYPE", "AUID2ORDERDETAILS");
@@ -124,8 +125,7 @@ export async function getTotalOrderPerAUID(auid) {
     redirect: "follow",
   };
 
-  fetch("https://orderops.demoshoes.shop", requestOptions)
-    .then((response) => response.text())
-    .then((result) => console.log(result))
+  return fetch(url, requestOptions)
+    .then((response) => response.json())
     .catch((error) => console.log("error", error));
 }

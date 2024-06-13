@@ -14,169 +14,10 @@
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/insightiqFavicon.ico" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/gh/tonsky/FiraCode@5/distr/fira_code.css"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tonsky/FiraCode@5/distr/fira_code.css" />
     <script src="https://cdn.getphyllo.com/connect/v2/phyllo-connect.js"></script>
-    <!-- Google Tag Manager -->
-    <script>
-      (function (w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-        var f = d.getElementsByTagName(s)[0],
-          j = d.createElement(s),
-          dl = l != "dataLayer" ? "&l=" + l : "";
-        j.async = true;
-        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-        f.parentNode.insertBefore(j, f);
-      })(window, document, "script", "dataLayer", "GTM-NN6M9F3");
-    </script>
-    <!-- End Google Tag Manager -->
 
-    <!-- Microsoft clarity -->
-    <script type="text/javascript">
-      if ("%REACT_APP_MSCLARITY_ENABLED%") {
-        (function (c, l, a, r, i, t, y) {
-          c[a] =
-            c[a] ||
-            function () {
-              (c[a].q = c[a].q || []).push(arguments);
-            };
-          t = l.createElement(r);
-          t.async = 1;
-          t.src = "https://www.clarity.ms/tag/" + i;
-          y = l.getElementsByTagName(r)[0];
-          y.parentNode.insertBefore(t, y);
-        })(window, document, "clarity", "script", "i4bz05fb3r");
-      }
-    </script>
-    <!-- End Microsoft clarity -->
-
-    <!-- factorsai : Initilize of factorsai -->
-    <script type="text/javascript" id="">
-      window.faitracker =
-        window.faitracker ||
-        (function () {
-          this.q = [];
-          var b = new CustomEvent("FAITRACKER_QUEUED_EVENT");
-          return (
-            (this.init = function (a, c, e) {
-              this.TOKEN = a;
-              this.INIT_PARAMS = c;
-              this.INIT_CALLBACK = e;
-              window.dispatchEvent(new CustomEvent("FAITRACKER_INIT_EVENT"));
-            }),
-            (this.call = function () {
-              var a = { k: "", a: [] };
-              if (arguments && 1 <= arguments.length) {
-                for (var c = 1; c < arguments.length; c++)
-                  a.a.push(arguments[c]);
-                a.k = arguments[0];
-              }
-              this.q.push(a);
-              window.dispatchEvent(b);
-            }),
-            (this.message = function () {
-              window.addEventListener("message", function (a) {
-                "faitracker" === a.data.origin &&
-                  this.call("message", a.data.type, a.data.message);
-              });
-            }),
-            this.message(),
-            this.init("1mah3y9vl7lbp17dycl2wylkhvyafhsy", {
-              host: "https://api.b3mxnuvcer.com",
-            }),
-            this
-          );
-        })();
-      (function () {
-        var b = document.createElement("script");
-        b.type = "text/javascript";
-        b.src = "https://asset.b3mxnuvcer.com/b3mxnuvcer.js";
-        b.async = !0;
-        (d =
-          document.getElementsByTagName("script")[0]).parentNode.insertBefore(
-          b,
-          d
-        );
-      })();
-    </script>
-
-    <!-- Segment -->
-    <script>
-      !(function () {
-        var analytics = (window.analytics = window.analytics || []);
-        if (!analytics.initialize)
-          if (analytics.invoked)
-            window.console &&
-              console.error &&
-              console.error("Segment snippet included twice.");
-          else {
-            analytics.invoked = !0;
-            analytics.methods = [
-              "trackSubmit",
-              "trackClick",
-              "trackLink",
-              "trackForm",
-              "pageview",
-              "identify",
-              "reset",
-              "group",
-              "track",
-              "ready",
-              "alias",
-              "debug",
-              "page",
-              "once",
-              "off",
-              "on",
-              "addSourceMiddleware",
-              "addIntegrationMiddleware",
-              "setAnonymousId",
-              "addDestinationMiddleware",
-            ];
-            analytics.factory = function (e) {
-              return function () {
-                var t = Array.prototype.slice.call(arguments);
-                t.unshift(e);
-                analytics.push(t);
-                return analytics;
-              };
-            };
-            for (var e = 0; e < analytics.methods.length; e++) {
-              var key = analytics.methods[e];
-              analytics[key] = analytics.factory(key);
-            }
-            analytics.load = function (key, e) {
-              var t = document.createElement("script");
-              t.type = "text/javascript";
-              t.async = !0;
-              t.src =
-                "https://cdn.segment.com/analytics.js/v1/" +
-                key +
-                "/analytics.min.js";
-              var n = document.getElementsByTagName("script")[0];
-              n.parentNode.insertBefore(t, n);
-              analytics._loadOptions = e;
-            };
-            analytics._writeKey = "%REACT_APP_SEGMENT_API_KEY%";
-            analytics.SNIPPET_VERSION = "4.15.3";
-            analytics.load("%REACT_APP_SEGMENT_API_KEY%", {
-              cookie: {
-                secure: true,
-                sameSite: "Strict",
-                httpOnly: true,
-              },
-            });
-          }
-      })();
-    </script>
-    <!-- End Segment -->
     <script>
       /**
        * If browser back button was used, flush cache
@@ -212,12 +53,7 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <!-- Google Tag Manager (noscript) -->
     <noscript
-      ><iframe
-        src="https://www.googletagmanager.com/ns.html?id=GTM-NN6M9F3"
-        height="0"
-        width="0"
-        style="display: none; visibility: hidden"
-      ></iframe
+      ><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NN6M9F3" height="0" width="0" style="display: none; visibility: hidden"></iframe
     ></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <div id="root"></div>
