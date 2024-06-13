@@ -106,7 +106,7 @@ export default function UserJourneyPage() {
       )}
       <div style={{ display: "flex", flexDirection: "column", gap: "48px" }}>
         <span className="event-journey-header">Your event journey</span>
-        <EventJourney />
+        <EventJourney userEvents={userEvents} />
       </div>
     </div>
   );
