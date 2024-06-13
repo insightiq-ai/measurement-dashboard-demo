@@ -12,7 +12,7 @@ export default function UserJourneyPage() {
     const navigate = useNavigate();
     const { userId } = useParams();
     const [user, setUser] = useState(null);
-    const [userEvents, setUserEvents] = useState(null);
+    const [userEvents, setUserEvents] = useState([]);
     // Populate these values from the Hasura API
     const [totalOrderValue, setTotalOrderValue] = useState(TOTAL_CREATOR_COST);
     const [ordersPlaced, setOrdersPlaced] = useState(20);
@@ -29,12 +29,6 @@ export default function UserJourneyPage() {
             setUserEvents(res?.data);
         });
     }, [userId]);
-
-    // useEffect(() => {
-    //     if (userEvents) {
-    //         console.log(splitOrderValueByMedium(userEvents, totalOrderValue));
-    //     }
-    // }, [userEvents]);
 
     function countUtmMediums(data) {
         const mediumCounts = {
@@ -86,7 +80,7 @@ export default function UserJourneyPage() {
                 value > 0 && mediumWeights.push({
                     icon: iconMapping[medium],  // Map the medium to its corresponding icon
                     title: medium,
-                    metric: currencyFormatter.format(value)
+                    metric: value
                 });
             }
         }
@@ -101,14 +95,14 @@ export default function UserJourneyPage() {
                     navigate(-1);
                 }}></i>
             </div>
-            {userEvents?.length > 0 && <div className={'div-top-container-user-journey'}>
+            <div className={'div-top-container-user-journey'}>
                 <AggregateMetrics user={user} userEvents={userEvents[0]}/>
                 <UserMetrics
                     user={user}
                     platformSplit={splitOrderValueByMedium(userEvents, totalOrderValue)}
                     ordersPlaced={ordersPlaced}
                     totalOrderValue={totalOrderValue}/>
-            </div>}
+            </div>
         </div>
     )
 

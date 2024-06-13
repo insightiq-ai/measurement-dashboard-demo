@@ -2,14 +2,22 @@ import React, { useEffect, useState } from 'react';
 import './PerformancePage.scss';
 import SummaryMetrics from "../../components/SummaryComponents/SummaryMetrics/SummaryMetrics";
 import { TabSwitch } from "../../components";
-import { ALL_USERS, CREATORS, SUMMARY, UTM_LINKS, TOTAL_CREATOR_COST, NUMBER_OF_CREATORS } from "../../utils/constants";
+import { ALL_USERS, CREATORS, NUMBER_OF_CREATORS, SUMMARY, TOTAL_CREATOR_COST, UTM_LINKS } from "../../utils/constants";
 import TabPanel from "../../components/TabSwitch/TabPanel";
-import { getAttributionStatistics, getDashboardLinkMetrics, getPromocodeAnalytics, getUsers } from "../../api/api";
-import { currencyFormatter, formatNumber, isEmpty, percentFormatter } from "../../utils/util";
+import {
+    getAttributionStatistics,
+    getCreatorsData,
+    getDashboardLinkMetrics,
+    getPromocodeAnalytics,
+    getUsers
+} from "../../api/api";
+import { convertTimeToLocale, currencyFormatter, formatNumber, isEmpty, percentFormatter } from "../../utils/util";
 import UtmLinksMetrics from "../../components/UtmLinksComponents/UtmLinksMetrics/UtmLinksMetrics";
-import { getSortedHeaderClass } from "../../utils/DataGridUtils";
 import Grid from '../../components/Grid/Grid';
 import { useNavigate } from "react-router-dom";
+import { DataGrid } from "@mui/x-data-grid";
+import { CustomFooter, getSortedHeaderClass } from "../../utils/DataGridUtils";
+import {Colors} from '../../styles/colors';
 
 export default function PerformancePage(props) {
     const [analytics, setAnalytics] = useState(null);
@@ -56,53 +64,29 @@ export default function PerformancePage(props) {
     const addToCarts = null;
     const checkoutsInitiated = null;
 
-    const defaultSortModel = [{ field: 'updated_at', sort: 'desc' }];
-    const [sortModel, setSortModel] = useState(defaultSortModel);
+
     const ROW_HEIGHT = 100;
     const PAGE_SIZE = 10;
     const [isGridLoading, setGridLoading] = useState(false);
     const [pageNumber, setPageNumber] = useState(0);
     const [totalUserRows, setTotalUserRows] = useState(0);
     const [userRows, setUserRows] = useState([]);
+    const [totalCreatorRows, setTotalCreatorRows] = useState(0);
+    const [creatorRows, setCreatorRows] = useState([]);
+    const defaultSortModel = [{ field: 'roi', sort: 'desc' }];
+    const [sortModel, setSortModel] = useState(defaultSortModel);
 
     useEffect(() => {
-        const storeId = '0cce0866-c57d-483c-a0fa-49ed138d6f5f';
-        // const storeId = '671ade3e-133b-4bcb-932e-a81321e9cc83';
-        // const storeId = '554ad27b-7eba-4980-a3ff-f4c4e7e38d26';
-        getPromocodeAnalytics({ storeId }).then((res) => {
-            console.log(`getPromocodeAnalytics`);
-            console.log(res);
-            setAnalytics(res);
+        const storeId = process.env.REACT_APP_STORE_ID;
+        getPromocodeAnalytics({ storeId }).then(setAnalytics);
+        getAttributionStatistics().then(setAttributionStatistics);
+        getDashboardLinkMetrics().then(setDashboardLinkMetrics);
+        getCreatorsData().then((res) => {
+            if (!isEmpty(res)) {
+                setCreatorRows(res);
+                setTotalCreatorRows(res?.length);
+            }
         });
-    }, []);
-
-    useEffect(() => {
-
-        getAttributionStatistics().then((res) => {
-            console.log(`getAttributionStatistics`);
-            console.log(res);
-            setAttributionStatistics(res);
-        });
-    }, []);
-
-    useEffect(() => {
-        getDashboardLinkMetrics().then((res) => {
-            console.log(`getDashboardLinkMetrics`);
-            console.log(res);
-            setDashboardLinkMetrics(res);
-        });
-
-
-        //
-        // getUserById({ userId: 'ec46c10a-42ac-4949-a9bd-33c0a56f7a62' }).then((res) => {
-        //     console.log(`getUserById`);
-        //     console.log(res);
-        // });
-        //
-        // getUserEvents({ userId: 'ec46c10a-42ac-4949-a9bd-33c0a56f7a62' }).then((res) => {
-        //     console.log(`getUserEvents`);
-        //     console.log(res);
-        // });
     }, []);
 
     useEffect(() => {
@@ -110,15 +94,11 @@ export default function PerformancePage(props) {
         getUsers({
             limit: PAGE_SIZE,
             offset: pageNumber * PAGE_SIZE,
-        }).then((res) => {
-            console.log(`getUsers`);
-            console.log(res);
-            // const { data } = res;
-            setUserRows(res);
-
-        }).finally(() => {
-            setGridLoading(false);
-        });
+        })
+            .then(setUserRows)
+            .finally(() => {
+                setGridLoading(false);
+            });
     }, [sortModel, pageNumber]);
 
     useEffect(() => {
@@ -132,24 +112,20 @@ export default function PerformancePage(props) {
         headerClassName: 'subtitle-m mui-data-grid-header hideRightSeparator',
     };
 
+    // Users table
     function renderIdCell(params) {
         const id = params.row['id'];
-        return <p>{id}</p>;
+        return id;
     }
 
     function renderEventsCell(params) {
         const number_of_events = params.row['number_of_events'];
-        return <p>{number_of_events}</p>;
-    }
-
-    function renderTotalSalesCell(params) {
-        // const id = params.row['id'];
-        return <p>{100}</p>;
+        return number_of_events;
     }
 
     function renderDeviceCountCell(params) {
         const number_of_fingerprints = params.row['number_of_fingerprints'];
-        return <p>{number_of_fingerprints}</p>;
+        return number_of_fingerprints;
     }
 
     function renderLastActiveCell(params) {
@@ -157,7 +133,7 @@ export default function PerformancePage(props) {
         if (date === undefined) {
             date = params.row['updated_at'];
         }
-        return <p>{date}</p>;
+        return convertTimeToLocale(date);
     }
 
     const userColumns = [
@@ -173,22 +149,13 @@ export default function PerformancePage(props) {
         },
         {
             ...commonHeaderProps,
-            align: 'left',
+            align: 'right',
             field: 'number_of_events',
-            headerAlign: 'left',
+            headerAlign: 'right',
             headerName: 'Events collected',
             renderCell: renderEventsCell,
             sortable: false,
         },
-        // {
-        //     ...commonHeaderProps,
-        //     align: 'left',
-        //     field: 'something',
-        //     headerAlign: 'left',
-        //     headerName: 'Total sales',
-        //     renderCell: renderTotalSalesCell,
-        //     sortable: false,
-        // },
         {
             ...commonHeaderProps,
             align: 'right',
@@ -200,12 +167,108 @@ export default function PerformancePage(props) {
         },
         {
             ...commonHeaderProps,
-            align: 'left',
+            align: 'right',
             field: 'updated_at',
-            headerAlign: 'left',
+            headerAlign: 'right',
             headerName: 'Last active on',
             renderCell: renderLastActiveCell,
-            headerClassName: `${commonHeaderProps.headerClassName} ${getSortedHeaderClass(sortModel, 'updated_at')}`,
+            // headerClassName: `${commonHeaderProps.headerClassName} ${getSortedHeaderClass(sortModel, 'updated_at')}`,
+            sortable: false,
+        }
+    ];
+
+
+    // Creators table
+
+    function renderNameCell(params) {
+        const name = params.row['name'];
+        return name;
+    }
+
+    function renderUtmClicksCell(params) {
+        const utm_clicks = params.row['utm_clicks'];
+        return params.row.utm_clicks;
+    }
+
+    function renderCreatorCostCell(params) {
+        const creator_cost = params.row['creator_cost'];
+        return creator_cost;
+    }
+
+    function renderTotalSalesCell(params) {
+        const total_sales = params.row['total_sales'];
+        return total_sales;
+    }
+
+    function renderRoiCell(params) {
+        const roi = params.row['roi'];
+        return roi;
+    }
+
+    function renderPlatformsCell(params) {
+        const platforms = params.row['platforms'].join();
+        return platforms;
+    }
+
+    const creatorColumns = [
+        {
+            ...commonHeaderProps,
+            align: 'left',
+            field: 'name',
+            headerAlign: 'left',
+            headerName: 'Creator name',
+            renderCell: renderNameCell,
+            sortable: false,
+            flex: 1,
+        },
+        {
+            ...commonHeaderProps,
+            align: 'right',
+            field: 'utm_clicks',
+            headerAlign: 'right',
+            headerName: 'UTM Clicks',
+            renderCell: renderUtmClicksCell,
+            headerClassName: `${commonHeaderProps.headerClassName} ${getSortedHeaderClass(sortModel, 'utm_clicks')}`,
+            sortable: true,
+        },
+        {
+            ...commonHeaderProps,
+            align: 'right',
+            field: 'creator_cost',
+            headerAlign: 'right',
+            headerName: 'Creator cost',
+            renderCell: renderCreatorCostCell,
+            headerClassName: `${commonHeaderProps.headerClassName} ${getSortedHeaderClass(sortModel, 'creator_cost')}`,
+            sortable: true,
+        },
+        {
+            ...commonHeaderProps,
+            align: 'right',
+            field: 'total_sales',
+            headerAlign: 'right',
+            headerName: 'Total Sales',
+            renderCell: renderTotalSalesCell,
+            headerClassName: `${commonHeaderProps.headerClassName} ${getSortedHeaderClass(sortModel, 'total_sales')}`,
+            sortable: true,
+        },
+        {
+            ...commonHeaderProps,
+            align: 'right',
+            field: 'roi',
+            headerAlign: 'right',
+            headerName: 'ROI',
+            renderCell: renderRoiCell,
+            headerClassName: `${commonHeaderProps.headerClassName} ${getSortedHeaderClass(sortModel, 'roi')}`,
+            sortable: true,
+        },
+        {
+            ...commonHeaderProps,
+            align: 'right',
+            field: 'platforms',
+            headerAlign: 'right',
+            headerName: 'Platforms',
+            renderCell: renderPlatformsCell,
+            // headerClassName: `${commonHeaderProps.headerClassName} ${getSortedHeaderClass(sortModel, 'updated_at')}`,
             sortable: false,
         }
     ];
@@ -309,54 +372,77 @@ export default function PerformancePage(props) {
                 </div>
             </div>
             <div>
-            <div className='table-view-tab-switch-container' >
-                <TabSwitch
-                    handleTabChange={(ev, value) => {
-                        setTableViewCurrTab(value);
-                    }}
-                    aria-label="icon position tabs example"
-                    currentTab={tableViewCurrTab}
-                    tabs={tableViewTabs}
-                    height="55px"
-                    width="fit-content"
-                    variant={"underline"}
-                />
-            </div>
+                <div className='table-view-tab-switch-container'>
+                    <TabSwitch
+                        handleTabChange={(ev, value) => {
+                            setTableViewCurrTab(value);
+                        }}
+                        aria-label="icon position tabs example"
+                        currentTab={tableViewCurrTab}
+                        tabs={tableViewTabs}
+                        height="55px"
+                        width="fit-content"
+                        variant={"underline"}
+                    />
+                </div>
                 <TabPanel index={ALL_USERS} value={tableViewCurrTab}
-                    sx={{ margin: "0px", padding: "0px" }}>
+                          sx={{ margin: "0px", padding: "0px" }}>
                     <Grid gridProps={{
                         columns: userColumns,
-                        getRowHeight: () => ROW_HEIGHT,
+                        getRowHeight: () => 80,
                         pageSize: PAGE_SIZE,
                         loading: isGridLoading,
                         onPageChange: setPageNumber,
                         onRowClick: (params) => {
                             navigate(`/user-journey/${params.row.id}`);
                         },
-                        onSortModelChange: setSortModel,
                         page: pageNumber,
                         rowCount: totalUserRows,
                         rows: userRows,
-                        sortModel,
-                    }} />
+                    }}/>
                 </TabPanel>
                 <TabPanel index={CREATORS} value={tableViewCurrTab}
-                    sx={{ margin: "0px", padding: "0px" }}>
-                    <Grid gridProps={{
-                        columns: userColumns,
-                        getRowHeight: () => ROW_HEIGHT,
-                        pageSize: PAGE_SIZE,
-                        loading: isGridLoading,
-                        onPageChange: setPageNumber,
-                        onRowClick: (params) => {
-                            navigate(`/user-journey/${params.row.id}`);
-                        },
-                        onSortModelChange: setSortModel,
-                        page: pageNumber,
-                        rowCount: totalUserRows,
-                        rows: userRows,
-                        sortModel,
-                    }} />
+                          sx={{ margin: "0px", padding: "0px" }}>
+                    <div className={"grid-container"}
+                         style={{ height: 430 }}
+                    >
+                        <DataGrid
+                            columns={creatorColumns}
+                            rows={creatorRows}
+                            getRowHeight={() => 92}
+                            pageSize={PAGE_SIZE}
+                            page={0}
+                            onPageChange={() => {}}
+                            rowCount={totalCreatorRows}
+                            className={"mui-data-grid"}
+                            components={{
+                                Footer: (props) => <CustomFooter totalRows={totalCreatorRows} pageSize={PAGE_SIZE}
+                                                                 handlePageChange={() => {}} pageNumber={0}/>,
+                            }}
+                            disableColumnMenu
+                            disableSelectionOnClick
+                            getRowId={(row) => row.id}
+                            initialState={{
+                                sorting: { sortModel },
+                            }}
+                            pagination
+                            paginationMode={"server"}
+                            sortingMode={"client"}
+                            sortingOrder={allowedSorts}
+                            sx={{
+                                '& .hideRightSeparator > .MuiDataGrid-columnSeparator': {
+                                    display: 'none',
+                                }
+                            }}
+                            localeText={{
+                                noRowsLabel: (
+                                    <span className={"body-m"} style={{ color: Colors.neutralsSecondaryGrey }}>
+                            {"No creators found"}
+                        </span>
+                                ),
+                            }}
+                        />
+                    </div>
                 </TabPanel>
             </div>
         </div>
