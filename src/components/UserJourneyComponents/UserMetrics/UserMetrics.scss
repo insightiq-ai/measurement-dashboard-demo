@@ -7,7 +7,7 @@
 
   .div-user-metrics-box {
     display: flex;
-    width: 1126px;
+    //width: 1126px;
     padding: 40px 48px;
     align-items: flex-start;
     gap: 77px;
@@ -20,8 +20,9 @@
 
     .divider {
       width: 1px;
-      height: var(--CollectionsSelected, 287px);
       background: #E5E5E8;
+      align-self: center;
+      height: 100%;
     }
 
     .item-1 {

@@ -1,0 +1,24 @@
+.div-split-icon {
+  display: flex;
+  width: 254px;
+  height: 59px;
+  padding-right: 16px;
+  align-items: center;
+  align-content: center;
+  gap: 16px;
+  align-self: stretch;
+  flex-wrap: wrap;
+
+  .div-split-icon-left {
+    display: flex;
+    align-items: center;
+  }
+
+  .div-split-icon-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
