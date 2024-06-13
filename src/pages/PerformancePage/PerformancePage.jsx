@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './PerformancePage.scss';
 import SummaryMetrics from "../../components/SummaryComponents/SummaryMetrics/SummaryMetrics";
 import { TabSwitch } from "../../components";
-import { SUMMARY, UTM_LINKS } from "../../utils/constants";
+import { ALL_USERS, CREATORS, SUMMARY, UTM_LINKS } from "../../utils/constants";
 import TabPanel from "../../components/TabSwitch/TabPanel";
 import { getAttributionStatistics, getDashboardLinkMetrics, getPromocodeAnalytics, getUsers } from "../../api/api";
 import { currencyFormatter, formatNumber, isEmpty, percentFormatter } from "../../utils/util";
@@ -31,6 +31,14 @@ export default function PerformancePage(props) {
             label: UTM_LINKS,
         },
     ];
+    const tableViewTabs = [
+        {
+            label: ALL_USERS,
+        }, {
+            label: CREATORS,
+        }
+    ];
+    const [tableViewCurrTab, setTableViewCurrTab] = useState(ALL_USERS);
 
     // Calculations - Summary
     const { order_summary } = analytics || {};
@@ -302,11 +310,32 @@ export default function PerformancePage(props) {
                             }]}
                         />
                     </TabPanel>
-
-
                 </div>
             </div>
-            <div>Tab bar here</div>
+            <div>
+                <div className="page-tab-switch-main-div">
+                    <TabSwitch
+                        handleTabChange={(ev, value) => {
+                            setTableViewCurrTab(value);
+                        }}
+                        aria-label="icon position tabs example"
+                        currentTab={tableViewCurrTab}
+                        tabs={tableViewTabs}
+                        height="55px"
+                        width="fit-content"
+                        variant={"underline"}
+                    />
+                </div>
+                <div>
+                    <TabPanel index={ALL_USERS} value={tableViewCurrTab}
+                        sx={{ margin: "0px", padding: "0px" }}>
+                    </TabPanel>
+                    <TabPanel index={CREATORS} value={tableViewCurrTab}
+                        sx={{ margin: "0px", padding: "0px" }}>
+
+                    </TabPanel>
+                </div>
+            </div>
             <Grid gridProps={{
                 columns,
                 getRowHeight: () => ROW_HEIGHT,
@@ -322,7 +351,7 @@ export default function PerformancePage(props) {
                 rowCount: totalUserRows,
                 rows: userRows,
                 sortModel,
-            }}/>
+            }} />
         </div>
     );
 }
