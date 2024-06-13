@@ -2,14 +2,12 @@ import React, { useEffect, useState } from 'react';
 import './PerformancePage.scss';
 import SummaryMetrics from "../../components/SummaryComponents/SummaryMetrics/SummaryMetrics";
 import { TabSwitch } from "../../components";
-import { SUMMARY, UTM_LINKS } from "../../utils/constants";
+import { SUMMARY, UTM_LINKS, TOTAL_CREATOR_COST, NUMBER_OF_CREATORS } from "../../utils/constants";
 import TabPanel from "../../components/TabSwitch/TabPanel";
 import { getAttributionStatistics, getDashboardLinkMetrics, getPromocodeAnalytics, getUsers } from "../../api/api";
 import { currencyFormatter, formatNumber, isEmpty, percentFormatter } from "../../utils/util";
 import UtmLinksMetrics from "../../components/UtmLinksComponents/UtmLinksMetrics/UtmLinksMetrics";
-import { CustomFooter, getSortedHeaderClass } from "../../utils/DataGridUtils";
-import { DataGrid } from "@mui/x-data-grid";
-import { Colors } from "../../styles/colors";
+import { getSortedHeaderClass } from "../../utils/DataGridUtils";
 import Grid from '../../components/Grid/Grid';
 import { useNavigate } from "react-router-dom";
 
@@ -18,9 +16,6 @@ export default function PerformancePage(props) {
     const [attributionStatistics, setAttributionStatistics] = useState(null);
     const [dashboardLinkMetrics, setDashboardLinkMetrics] = useState(null);
     const navigate = useNavigate();
-
-    const TOTAL_CREATOR_COST = 2000;
-    const NUMBER_OF_CREATORS = 3;
 
     const [currentTab, setCurrentTab] = useState(SUMMARY);
     const tabs = [
