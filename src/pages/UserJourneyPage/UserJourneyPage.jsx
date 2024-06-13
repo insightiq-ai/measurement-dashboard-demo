@@ -2,32 +2,23 @@ import React, { useEffect, useState } from "react";
 import "./UserJourneyPage.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import AggregateMetrics from "../../components/UserJourneyComponents/AggregateMetrics/AggregateMetrics";
-import { getUserById, getUserEvents, getTotalOrderPerAUID } from "../../api/api";
-import { currencyFormatter, isEmpty } from "../../utils/util";
+import { getTotalOrderPerAUID, getUserById, getUserEvents } from "../../api/api";
+import { isEmpty } from "../../utils/util";
 import UserMetrics from "../../components/UserJourneyComponents/UserMetrics/UserMetrics";
 import { EventJourney, Icons } from "../../components";
-import { TOTAL_CREATOR_COST } from "../../utils/constants";
 
 export default function UserJourneyPage() {
   const navigate = useNavigate();
   const { userId } = useParams();
   const [user, setUser] = useState(null);
-  const [userEvents, setUserEvents] = useState(null);
+  const [userEvents, setUserEvents] = useState([]);
   // Populate these values from the Hasura API
   const [totalOrderValuePerUser, setTotalOrderValuePerUser] = useState(null);
   const [ordersPlaced, setOrdersPlaced] = useState(null);
 
   useEffect(() => {
-    getUserById({ userId }).then((res) => {
-      console.log(`getUserById`);
-      console.log(res);
-      setUser(res);
-    });
-    getUserEvents({ userId, limit: 1 }).then((res) => {
-      console.log(`getUserEvents`);
-      console.log(res);
-      setUserEvents(res?.data);
-    });
+    getUserById({ userId }).then(setUser);
+    getUserEvents({ userId, limit: 1 }).then(setUserEvents);
     getTotalOrderPerAUID(userId).then((res) => {
       if ("summaries" in res) {
         setTotalOrderValuePerUser(!isEmpty(res?.summaries[0]?.order_total) ? res?.summaries[0]?.order_total : null);
@@ -35,12 +26,6 @@ export default function UserJourneyPage() {
       }
     });
   }, [userId]);
-
-  // useEffect(() => {
-  //     if (userEvents) {
-  //         console.log(splitOrderValueByMedium(userEvents, totalOrderValue));
-  //     }
-  // }, [userEvents]);
 
   function countUtmMediums(data) {
     const mediumCounts = {
@@ -90,7 +75,7 @@ export default function UserJourneyPage() {
           mediumWeights.push({
             icon: iconMapping[medium], // Map the medium to its corresponding icon
             title: medium,
-            metric: currencyFormatter.format(value),
+            metric: value,
           });
       }
     }

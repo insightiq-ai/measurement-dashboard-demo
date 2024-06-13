@@ -4,13 +4,9 @@ import LeftMainMetric from "../../LeftMainMetric/LeftMainMetric";
 import { Icons, PerformanceMetric } from "../../index";
 import SplitMetrics from "../SplitMetrics/SplitMetrics";
 import { currencyFormatter, formatNumber } from "../../../utils/util";
+import { CREATOR_SPLIT } from "../../../utils/constants";
 
 export default function UserMetrics({ platformSplit, totalOrderValue, ordersPlaced }) {
-    const CREATOR_SPLIT = [
-        { icon: <Icons.youtube_demo/>, title: 'Aakash', metric: currencyFormatter.format(totalOrderValue / 2) },
-        { icon: <Icons.instagram_demo/>, title: 'Dhruv', metric: currencyFormatter.format(totalOrderValue / 4) },
-        { icon: <Icons.twitter_demo/>, title: 'Mike', metric: currencyFormatter.format(totalOrderValue / 4) }
-    ];
     return (
         <div className={'div-user-metrics-container'}>
             <div className={'div-user-metrics-box'}>

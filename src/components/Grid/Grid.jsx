@@ -8,7 +8,6 @@ export default function Grid({ gridProps }) {
         rowCount,
         rows,
         page,
-        sortModel,
         onPageChange,
         pageSize,
         customProps,
@@ -39,13 +38,8 @@ export default function Grid({ gridProps }) {
                 disableColumnMenu
                 disableSelectionOnClick
                 getRowId={(row) => row.id}
-                initialState={{
-                    sorting: { sortModel },
-                }}
                 pagination
                 paginationMode={"server"}
-                sortingMode={"server"}
-                sortingOrder={allowedSorts}
                 sx={{
                     '& .hideRightSeparator > .MuiDataGrid-columnSeparator': {
                         display: 'none',
