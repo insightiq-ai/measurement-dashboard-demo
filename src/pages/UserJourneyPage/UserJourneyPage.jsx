@@ -5,7 +5,7 @@ import AggregateMetrics from "../../components/UserJourneyComponents/AggregateMe
 import { getUserById, getUserEvents, getTotalOrderPerAUID } from "../../api/api";
 import { currencyFormatter, isEmpty } from "../../utils/util";
 import UserMetrics from "../../components/UserJourneyComponents/UserMetrics/UserMetrics";
-import { Icons } from "../../components";
+import { EventJourney, Icons } from "../../components";
 import { TOTAL_CREATOR_COST } from "../../utils/constants";
 
 export default function UserJourneyPage() {
@@ -29,8 +29,10 @@ export default function UserJourneyPage() {
       setUserEvents(res?.data);
     });
     getTotalOrderPerAUID(userId).then((res) => {
-      setTotalOrderValuePerUser(!isEmpty(res?.summaries[0].order_total) ? res?.summaries[0].order_total : null);
-      setOrdersPlaced(!isEmpty(res?.summaries[0].number_of_orders) ? res?.summaries[0].number_of_orders : null);
+      if ("summaries" in res) {
+        setTotalOrderValuePerUser(!isEmpty(res?.summaries[0]?.order_total) ? res?.summaries[0]?.order_total : null);
+        setOrdersPlaced(!isEmpty(res?.summaries[0]?.number_of_orders) ? res?.summaries[0]?.number_of_orders : null);
+      }
     });
   }, [userId]);
 
@@ -117,6 +119,10 @@ export default function UserJourneyPage() {
           />
         </div>
       )}
+      <div style={{ display: "flex", flexDirection: "column", gap: "48px" }}>
+        <span className="event-journey-header">Your event journey</span>
+        <EventJourney />
+      </div>
     </div>
   );
 }

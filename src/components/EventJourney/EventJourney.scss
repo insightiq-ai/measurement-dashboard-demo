@@ -1,0 +1,64 @@
+.list-parent-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+.affiliate-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  > span {
+    color: var(--Neutrals-Primary-Grey, #121b2e);
+    font-family: Inter;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+  }
+}
+
+.affiliate-info-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+.line-break {
+  width: 1060px;
+  height: 1px;
+  background: #e5e5e8;
+}
+.affiliate-info-parent-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 493px;
+}
+.affiliate-store-details {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-direction: column;
+}
+.affiliate-device-details {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  span {
+    color: var(--Neutrals-Secondary-grey, #5a5a67);
+
+    /* Subtitle R */
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%; /* 19.6px */
+  }
+}
+.event-journey-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
