@@ -3,7 +3,7 @@ import "./UserJourneyPage.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import AggregateMetrics from "../../components/UserJourneyComponents/AggregateMetrics/AggregateMetrics";
 import { getUserById, getUserEvents, getTotalOrderPerAUID } from "../../api/api";
-import { currencyFormatter } from "../../utils/util";
+import { currencyFormatter, isEmpty } from "../../utils/util";
 import UserMetrics from "../../components/UserJourneyComponents/UserMetrics/UserMetrics";
 import { Icons } from "../../components";
 import { TOTAL_CREATOR_COST } from "../../utils/constants";
@@ -29,8 +29,9 @@ export default function UserJourneyPage() {
       setUserEvents(res?.data);
     });
     getTotalOrderPerAUID("78224cfe-15d1-4cfa-a4b3-a612625ff557").then((res) => {
-      setTotalOrderValuePerUser(res?.summaries[0].order_total);
-      setOrdersPlaced(res?.summaries[0].number_of_orders);
+      debugger;
+      setTotalOrderValuePerUser(!isEmpty(res?.summaries[0].order_total) ? res?.summaries[0].order_total : null);
+      setOrdersPlaced(!isEmpty(res?.summaries[0].number_of_orders) ? res?.summaries[0].number_of_orders : null);
     });
   }, [userId]);
 
