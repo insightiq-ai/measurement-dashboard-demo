@@ -66,7 +66,8 @@ export default function PerformancePage(props) {
     const [userRows, setUserRows] = useState([]);
 
     useEffect(() => {
-        const storeId = '671ade3e-133b-4bcb-932e-a81321e9cc83';
+        const storeId = '0cce0866-c57d-483c-a0fa-49ed138d6f5f';
+        // const storeId = '671ade3e-133b-4bcb-932e-a81321e9cc83';
         // const storeId = '554ad27b-7eba-4980-a3ff-f4c4e7e38d26';
         getPromocodeAnalytics({ storeId }).then((res) => {
             console.log(`getPromocodeAnalytics`);
@@ -159,7 +160,7 @@ export default function PerformancePage(props) {
         return <p>{date}</p>;
     }
 
-    const columns = [
+    const userColumns = [
         {
             ...commonHeaderProps,
             align: 'left',
@@ -324,14 +325,13 @@ export default function PerformancePage(props) {
                 <TabPanel index={ALL_USERS} value={tableViewCurrTab}
                     sx={{ margin: "0px", padding: "0px" }}>
                     <Grid gridProps={{
-                        columns,
+                        columns: userColumns,
                         getRowHeight: () => ROW_HEIGHT,
                         pageSize: PAGE_SIZE,
                         loading: isGridLoading,
                         onPageChange: setPageNumber,
                         onRowClick: (params) => {
                             navigate(`/user-journey/${params.row.id}`);
-                            // setClickedRow(rows.find((row) => row.id === params.row.id));
                         },
                         onSortModelChange: setSortModel,
                         page: pageNumber,
@@ -342,7 +342,21 @@ export default function PerformancePage(props) {
                 </TabPanel>
                 <TabPanel index={CREATORS} value={tableViewCurrTab}
                     sx={{ margin: "0px", padding: "0px" }}>
-                    <div>Creators table here</div>
+                    <Grid gridProps={{
+                        columns: userColumns,
+                        getRowHeight: () => ROW_HEIGHT,
+                        pageSize: PAGE_SIZE,
+                        loading: isGridLoading,
+                        onPageChange: setPageNumber,
+                        onRowClick: (params) => {
+                            navigate(`/user-journey/${params.row.id}`);
+                        },
+                        onSortModelChange: setSortModel,
+                        page: pageNumber,
+                        rowCount: totalUserRows,
+                        rows: userRows,
+                        sortModel,
+                    }} />
                 </TabPanel>
             </div>
         </div>

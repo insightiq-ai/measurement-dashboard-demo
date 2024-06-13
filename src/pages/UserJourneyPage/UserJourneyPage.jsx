@@ -3,16 +3,18 @@ import './UserJourneyPage.scss';
 import { useNavigate, useParams } from "react-router-dom";
 import AggregateMetrics from "../../components/UserJourneyComponents/AggregateMetrics/AggregateMetrics";
 import { getUserById, getUserEvents } from "../../api/api";
-import { currencyFormatter, formatNumber } from "../../utils/util";
+import { currencyFormatter } from "../../utils/util";
 import UserMetrics from "../../components/UserJourneyComponents/UserMetrics/UserMetrics";
 import { Icons } from "../../components";
+import { TOTAL_CREATOR_COST } from "../../utils/constants";
 
 export default function UserJourneyPage() {
     const navigate = useNavigate();
     const { userId } = useParams();
     const [user, setUser] = useState(null);
     const [userEvents, setUserEvents] = useState(null);
-    const [totalOrderValue, setTotalOrderValue] = useState(1000);
+    // Populate these values from the Hasura API
+    const [totalOrderValue, setTotalOrderValue] = useState(TOTAL_CREATOR_COST);
     const [ordersPlaced, setOrdersPlaced] = useState(20);
 
     useEffect(() => {
@@ -65,10 +67,10 @@ export default function UserJourneyPage() {
         const mediumWeights = [];
 
         const iconMapping = {
-            'YouTube': <Icons.youtube_demo />,
-            'TikTok': <Icons.twitter_demo />,
-            'Instagram': <Icons.instagram_demo />,
-            'Twitter': <Icons.twitter_demo />,
+            'YouTube': <Icons.youtube_demo/>,
+            'TikTok': <Icons.twitter_demo/>,
+            'Instagram': <Icons.instagram_demo/>,
+            'Twitter': <Icons.twitter_demo/>,
         };
 
         for (const medium in mediumCounts) {
@@ -104,8 +106,8 @@ export default function UserJourneyPage() {
                 <UserMetrics
                     user={user}
                     platformSplit={splitOrderValueByMedium(userEvents, totalOrderValue)}
-                    ordersPlaced={formatNumber(ordersPlaced)}
-                    totalOrderValue={currencyFormatter.format(totalOrderValue)}/>
+                    ordersPlaced={ordersPlaced}
+                    totalOrderValue={totalOrderValue}/>
             </div>}
         </div>
     )
