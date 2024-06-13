@@ -70,7 +70,7 @@ export default function PerformancePage(props) {
   const clickThroughRate = !isEmpty(landingPageViews) && landingPageViews !== 0 ? totalLinkClicks / landingPageViews : null;
   const costPerLpv = !isEmpty(totalCreatorCost) && totalCreatorCost !== 0 && landingPageViews !== 0 ? totalCreatorCost / landingPageViews : null;
   const addToCarts = (totalOrderCount || 0) + (totalAbondonedCheckouts || 0);
-  const checkoutsInitiated = totalAbondonedCheckouts || 0;
+  const checkoutsInitiated = totalOrderCount || 0;
 
   const ROW_HEIGHT = 100;
   const PAGE_SIZE = 10;
