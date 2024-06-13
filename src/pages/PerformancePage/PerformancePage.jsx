@@ -11,11 +11,13 @@ import { CustomFooter, getSortedHeaderClass } from "../../utils/DataGridUtils";
 import { DataGrid } from "@mui/x-data-grid";
 import { Colors } from "../../styles/colors";
 import Grid from '../../components/Grid/Grid';
+import { useNavigate } from "react-router-dom";
 
 export default function PerformancePage(props) {
     const [analytics, setAnalytics] = useState(null);
     const [attributionStatistics, setAttributionStatistics] = useState(null);
     const [dashboardLinkMetrics, setDashboardLinkMetrics] = useState(null);
+    const navigate = useNavigate();
 
     const TOTAL_CREATOR_COST = 2000;
     const NUMBER_OF_CREATORS = 3;
@@ -312,6 +314,7 @@ export default function PerformancePage(props) {
                     loading: isGridLoading,
                     onPageChange: setPageNumber,
                     onRowClick: (params) => {
+                        navigate(`/user-journey/${params.row.id}`);
                         // setClickedRow(rows.find((row) => row.id === params.row.id));
                     },
                     onSortModelChange: setSortModel,
