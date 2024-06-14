@@ -10,6 +10,7 @@ export default function MeasurementDemoRoutes() {
                 <Route path="home" element={<PerformancePage />}/>
                 <Route path="*" element={<Navigate to={'home'}/>}/>
                 <Route path={"user-journey/:userId"} element={<UserJourneyPage />}/>
+                <Route path="*" element={<Navigate to="/home" replace />} />
             </Routes>
         </>
     );

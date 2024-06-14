@@ -5,10 +5,11 @@ import AggregateMetrics from "../../components/UserJourneyComponents/AggregateMe
 import { getTotalOrderPerAUID, getUserById, getUserEvents } from "../../api/api";
 import { isEmpty } from "../../utils/util";
 import UserMetrics from "../../components/UserJourneyComponents/UserMetrics/UserMetrics";
-import { EventJourney, Icons } from "../../components";
+import { EventJourney } from "../../components";
 import InvertedPrimaryButton from "../../components/InvertedPrimaryButton/InvertedPrimaryButton";
 import IntermediateLoader from "../../components/IntermediateLoader/IntermediateLoader";
 import { iconMapping } from "../../utils/constants";
+import { currencyFormatter, formatNumber } from "../../utils/util";
 
 export default function UserJourneyPage() {
     const navigate = useNavigate();
@@ -28,13 +29,11 @@ export default function UserJourneyPage() {
             setCountOfFetchedRecords(result.length);
         });
         getTotalOrderPerAUID(userId).then((res) => {
-            if ("summaries" in res) {
-                if (isEmpty(res?.summaries)) {
-                    return;
-                }
-                setTotalOrderValuePerUser(!isEmpty(res?.summaries[0]?.order_total) ? res?.summaries[0]?.order_total : null);
-                setOrdersPlaced(!isEmpty(res?.summaries[0]?.number_of_orders) ? res?.summaries[0]?.number_of_orders : null);
+            if (isEmpty(res?.summaries)) {
+                return;
             }
+            setTotalOrderValuePerUser(!isEmpty(res?.summaries[0]?.order_total) ? res?.summaries[0]?.order_total : 0);
+            setOrdersPlaced(!isEmpty(res?.summaries[0]?.number_of_orders) ? res?.summaries[0]?.number_of_orders : 0);
         });
         setTimeout(() => setIsLoading(false), 1000);
     }, [userId, offset]);
@@ -79,10 +78,10 @@ export default function UserJourneyPage() {
             } else {
                 // Calculate the proportion of each medium
                 const value = (mediumCounts[medium] / totalCounts) * totalOrderValue;
-                value > 0 && mediumWeights.push({
+                mediumWeights.push({
                     icon: iconMapping[medium],  // Map the medium to its corresponding icon
                     title: medium,
-                    metric: value
+                    metric: value || '-'
                 });
             }
         }
@@ -114,8 +113,8 @@ export default function UserJourneyPage() {
                         <UserMetrics
                             user={user}
                             platformSplit={splitOrderValueByMedium(userEvents, totalOrderValuePerUser)}
-                            ordersPlaced={ordersPlaced}
-                            totalOrderValue={totalOrderValuePerUser}
+                            ordersPlaced={isEmpty(ordersPlaced) || ordersPlaced === 0 ? '-' : formatNumber(ordersPlaced)}
+                            totalOrderValue={isEmpty(totalOrderValuePerUser) || totalOrderValuePerUser === 0 ? '-' : currencyFormatter.format(totalOrderValuePerUser)}
                         />
                     </div>
                 )}

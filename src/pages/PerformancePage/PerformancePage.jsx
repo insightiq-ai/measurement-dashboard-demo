@@ -16,6 +16,7 @@ import {
 import { convertTimeToLocale, currencyFormatter, formatNumber, isEmpty, percentFormatter } from "../../utils/util";
 import UtmLinksMetrics from "../../components/UtmLinksComponents/UtmLinksMetrics/UtmLinksMetrics";
 import Grid from "../../components/Grid/Grid";
+import { Icons } from "../../components";
 import { CustomFooter, getSortedHeaderClass } from "../../utils/DataGridUtils";
 import { DataGrid } from "@mui/x-data-grid";
 import { Colors } from "../../styles/colors";
@@ -79,7 +80,8 @@ export default function PerformancePage(props) {
 
     const ROW_HEIGHT = 100;
     const PAGE_SIZE = 10;
-    const [isGridLoading, setGridLoading] = useState(false);
+    const [isUserGridLoading, setUserGridLoading] = useState(false);
+    const [isCreatorGridLoading, setCreatorGridLoading] = useState(false);
     const [pageNumber, setPageNumber] = useState(0);
     const [totalUserRows, setTotalUserRows] = useState(0);
     const [userRows, setUserRows] = useState([]);
@@ -93,11 +95,14 @@ export default function PerformancePage(props) {
         getPromocodeAnalytics({ storeId }).then(setAnalytics);
         getAttributionStatistics().then(setAttributionStatistics);
         getDashboardLinkMetrics().then(setDashboardLinkMetrics);
+        setCreatorGridLoading(true);
         getCreatorsData({ storeId }).then((res) => {
             if (!isEmpty(res)) {
                 setCreatorRows(res);
                 setTotalCreatorRows(res?.length);
             }
+        }).finally(() => {
+            setCreatorGridLoading(false);
         });
         getAllOrdersFromShopify().then((res) => {
             setTotalOrderCount(res?.count);
@@ -108,14 +113,14 @@ export default function PerformancePage(props) {
     }, []);
 
     useEffect(() => {
-        setGridLoading(true);
+        setUserGridLoading(true);
         getUsers({
             limit: PAGE_SIZE,
             offset: pageNumber * PAGE_SIZE,
         })
             .then(setUserRows)
             .finally(() => {
-                setGridLoading(false);
+                setUserGridLoading(false);
             });
     }, [sortModel, pageNumber]);
 
@@ -132,26 +137,53 @@ export default function PerformancePage(props) {
 
     // Users table
     function renderIdCell(params) {
-        const id = params.row["id"];
-        return id;
+        let id = '-', icon = null;
+        const icons = [
+            <Icons.avatar1_demo />,
+            <Icons.avatar2_demo />,
+            <Icons.avatar3_demo />,
+            <Icons.avatar4_demo />,
+            <Icons.avatar5_demo />,
+        ];
+        if (!isEmpty(params.row.id)) {
+            id = params.row.id;
+            const rowIndex = params.api.getRowIndexRelativeToVisibleRows ? params.api.getRowIndexRelativeToVisibleRows(params.row.id) : 0;
+            const iconIndex = rowIndex % icons.length; // Use modulo to cycle through icons
+            icon = icons[iconIndex]; // Get the correct icon from the array
+        }
+        return <span className={'body-b'} style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 16,
+        }}>{icon}{id}</span>;
     }
 
     function renderEventsCell(params) {
-        const number_of_events = params.row["number_of_events"];
-        return number_of_events;
+        let number_of_events = '-';
+        if (!isEmpty(params.row.number_of_events) && params.row.number_of_events !== 0) {
+            number_of_events = formatNumber(params.row.number_of_events);
+        }
+        return <span className={'body-r'}>{number_of_events}</span>;
     }
 
     function renderDeviceCountCell(params) {
-        const number_of_fingerprints = params.row["number_of_fingerprints"];
-        return number_of_fingerprints;
+        let number_of_fingerprints = '-';
+        if (!isEmpty(params.row.number_of_fingerprints) && params.row.number_of_fingerprints !== 0) {
+            number_of_fingerprints = formatNumber(params.row.number_of_fingerprints);
+        }
+        return <span className={'body-r'}>{number_of_fingerprints}</span>;
     }
 
     function renderLastActiveCell(params) {
-        let date = params.row["event_timestamp"];
-        if (date === undefined) {
-            date = params.row["updated_at"];
+        let updated_at = '-';
+        if (!isEmpty(params.row.updated_at)) {
+            updated_at = convertTimeToLocale(params.row.updated_at);
         }
-        return convertTimeToLocale(date);
+        return <span className={'body-r'}>{updated_at}</span>;
+        // let date = params.row["event_timestamp"];
+        // if (date === undefined) {
+        //     date = params.row["updated_at"];
+        // }
     }
 
     const userColumns = [
@@ -173,6 +205,7 @@ export default function PerformancePage(props) {
             headerName: "Events collected",
             renderCell: renderEventsCell,
             sortable: false,
+            flex: 0.5
         },
         {
             ...commonHeaderProps,
@@ -182,6 +215,7 @@ export default function PerformancePage(props) {
             headerName: "Device count",
             renderCell: renderDeviceCountCell,
             sortable: false,
+            flex: 0.3
         },
         {
             ...commonHeaderProps,
@@ -192,6 +226,7 @@ export default function PerformancePage(props) {
             renderCell: renderLastActiveCell,
             // headerClassName: `${commonHeaderProps.headerClassName} ${getSortedHeaderClass(sortModel, 'updated_at')}`,
             sortable: false,
+            flex: 0.6
         },
     ];
 
@@ -449,7 +484,7 @@ export default function PerformancePage(props) {
                             columns: userColumns,
                             getRowHeight: () => 80,
                             pageSize: PAGE_SIZE,
-                            loading: isGridLoading,
+                            loading: isUserGridLoading,
                             onPageChange: setPageNumber,
                             onRowClick: (params) => {
                                 navigate(`/user-journey/${params.row.id}`);
@@ -463,6 +498,7 @@ export default function PerformancePage(props) {
                 <TabPanel index={CREATORS} value={tableViewCurrTab} sx={{ margin: "0px", padding: "0px" }}>
                     <div className={"grid-container"} style={{ height: 430 }}>
                         <DataGrid
+                            loading={isCreatorGridLoading}
                             columns={creatorColumns}
                             rows={creatorRows}
                             getRowHeight={() => 92}
@@ -480,12 +516,13 @@ export default function PerformancePage(props) {
                             disableColumnMenu
                             disableSelectionOnClick
                             getRowId={(row) => row.id}
-                            // initialState={{
-                            //     sorting: { sortModel },
-                            // }}
+                            initialState={{
+                                sorting: { sortModel },
+                            }}
                             // pagination
-                            // sortingMode={"client"}
-                            // sortingOrder={allowedSorts}
+                            sortingMode={"client"}
+                            sortingOrder={allowedSorts}
+                            onSortModelChange={setSortModel}
                             sx={{
                                 "& .hideRightSeparator > .MuiDataGrid-columnSeparator": {
                                     display: "none",

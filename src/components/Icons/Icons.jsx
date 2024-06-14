@@ -1,4 +1,9 @@
 import { ReactComponent as aakash_demo} from './aakash_demo.svg';
+import { ReactComponent as avatar1_demo} from './avatar1_demo.svg';
+import { ReactComponent as avatar2_demo} from './avatar2_demo.svg';
+import { ReactComponent as avatar3_demo} from './avatar3_demo.svg';
+import { ReactComponent as avatar4_demo} from './avatar4_demo.svg';
+import { ReactComponent as avatar5_demo} from './avatar5_demo.svg';
 import { ReactComponent as chrome} from './chrome.svg';
 import { ReactComponent as circular_loader} from './circular_loader.svg';
 import { ReactComponent as ctr} from './ctr.svg';
@@ -13,4 +18,4 @@ import { ReactComponent as total_roi} from './total_roi.svg';
 import { ReactComponent as twitter_demo} from './twitter_demo.svg';
 import { ReactComponent as users_icon} from './users_icon.svg';
 import { ReactComponent as youtube_demo} from './youtube_demo.svg';
-export default {aakash_demo, chrome, circular_loader, ctr, dhruv_demo, facebook_demo, instagram_demo, link_to_icon, mike_demo, smartphone_line, tiktok_demo, total_roi, twitter_demo, users_icon, youtube_demo};
+export default {aakash_demo, avatar1_demo, avatar2_demo, avatar3_demo, avatar4_demo, avatar5_demo, chrome, circular_loader, ctr, dhruv_demo, facebook_demo, instagram_demo, link_to_icon, mike_demo, smartphone_line, tiktok_demo, total_roi, twitter_demo, users_icon, youtube_demo};
