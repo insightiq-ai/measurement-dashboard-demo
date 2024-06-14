@@ -27,6 +27,7 @@ import { ReactComponent as checkbox_filled_black} from './checkbox_filled_black.
 import { ReactComponent as checkbox_unfilled} from './checkbox_unfilled.svg';
 import { ReactComponent as checked_checkbox} from './checked_checkbox.svg';
 import { ReactComponent as checkmark_icon} from './checkmark_icon.svg';
+import { ReactComponent as chrome} from './chrome.svg';
 import { ReactComponent as circle_env} from './circle_env.svg';
 import { ReactComponent as circular_loader} from './circular_loader.svg';
 import { ReactComponent as clock_icon} from './clock_icon.svg';
@@ -156,6 +157,7 @@ import { ReactComponent as scratched_icon} from './scratched_icon.svg';
 import { ReactComponent as search_icon_grey_bg} from './search_icon_grey_bg.svg';
 import { ReactComponent as setup_guide_logo} from './setup_guide_logo.svg';
 import { ReactComponent as share_icon} from './share_icon.svg';
+import { ReactComponent as smartphone_line} from './smartphone-line.svg';
 import { ReactComponent as something_went_wrong} from './something_went_wrong.svg';
 import { ReactComponent as staging_circle} from './staging_circle.svg';
 import { ReactComponent as start_adding_creator} from './start_adding_creator.svg';

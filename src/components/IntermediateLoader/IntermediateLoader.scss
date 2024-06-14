@@ -1,0 +1,43 @@
+.content-box-home {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.5rem 3rem;
+}
+
+.loader-div {
+  font-family: "Inter";
+  font-style: normal;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  color: #D4D3D9 !important;
+  text-align: center;
+  padding: 0rem 1rem;
+  h2 {
+    color: #8a8894;
+    font-size: 30px;
+    font-weight: 500;
+    font-size: 16px;
+  }
+  p {
+    width: 613px;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 150%;
+    color: #a09fa9;
+    a{
+        color: #a09fa9;
+        text-decoration: underline;
+
+    }
+  }
+
+  .circular-progress {
+    color: #D4D3D9;
+  }
+  
+}
