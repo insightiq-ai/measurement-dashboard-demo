@@ -17,7 +17,7 @@ export async function getPromocodeAnalytics({ warehouse, storeId }) {
 }
 
 export async function getAttributionStatistics() {
-  const api = getBasicAuthInstance(process.env.REACT_APP_CLIENT_ID_DEV3, process.env.REACT_APP_CLIENT_SECRET_DEV3, "https://api3.dev.insightiq.ai");
+  const api = getBasicAuthInstance(process.env.REACT_APP_CLIENT_ID_PROD, process.env.REACT_APP_CLIENT_SECRET_PROD, "https://api.insightiq.ai");
   try {
     const response = await api.get(`v1/measurement/attribution/statistics`);
     return response.data;
