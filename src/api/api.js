@@ -1,13 +1,13 @@
 import { getBasicAuthInstance, getShopifyAuthInstance } from "./axiosInstance";
-import { CREATOR_SPLIT, CREATOR_AAKASH, CREATOR_DHRUV, CREATOR_MIKE } from "../utils/constants";
-import { currencyFormatter, percentFormatter } from "../utils/util";
-import { isEmpty } from "../utils/util";
+import { CREATOR_AAKASH, CREATOR_DHRUV, CREATOR_MIKE, CREATOR_SPLIT } from "../utils/constants";
+import { currencyFormatter, isEmpty, percentFormatter } from "../utils/util";
+
 const axios = require("axios");
 
-export async function getPromocodeAnalytics({ warehouse, storeId, discountId }) {
+export async function getPromocodeAnalytics({ storeId, discountId }) {
     // const { clientId, clientSecret } = getClientIDAndSecret();
     const api = getBasicAuthInstance(process.env.REACT_APP_CLIENT_ID_PROD, process.env.REACT_APP_CLIENT_SECRET_PROD, "https://api.insightiq.ai");
-    let url = `v1/measurement/warehouses/${warehouse}/stores/${storeId}/discounts/analytics`;
+    let url = `v1/measurement/stores/${storeId}/discounts/analytics`;
     !isEmpty(discountId) && (url += `?discount_id=${discountId}`);
     try {
         const response = await api.get(url);
@@ -98,60 +98,92 @@ export async function getUserEvents({ userId, limit, offset }) {
 }
 
 async function shortIoLinkAnalytics({ linkId }) {
-    const url = `https://statistics.short.io/statistics/link/${linkId}`;
-    const options = {
-        headers: {
-            'Authorization': process.env.REACT_APP_SHORT_IO_API_KEY,
-            'accept': '*/*'
-        },
-        params: {
-            period: 'total',
-            tz: 'UTC'
-        }
+    const url = "https://proxy.cors.sh/" + `https://statistics.short.io/statistics/link/${linkId}?period=total&tz=UTC`;
+    // Configure headers
+    const headers = {
+        'Authorization': process.env.REACT_APP_SHORT_IO_API_KEY,
+        'x-cors-api-key': process.env.REACT_APP_CORSSH_TOKEN,
+        'accept': '*/*',
+        'Content-Type': 'application/json'
+    };
+
+    // Configure query parameters
+    const params = {
+        period: 'total',
+        tz: 'UTC'
     };
 
     try {
-        const response = await axios.get(url, options);
-        console.log(response);
-        return response;
+        // Make the GET request with axios
+        const response = await axios.get(url, { headers, params });
+        return response.data;
     } catch (error) {
-        console.error('Error making API request:', error);
-        return null;
+        console.error('Error:', error);
+        throw error;
     }
 }
 
-export async function getCreatorsData() {
-    return new Promise((resolve, reject) => {
+async function getUtmClicksForCreator(linkIds) {
+    const linkPromises = linkIds.map(linkId => shortIoLinkAnalytics({ linkId }));
 
-        const creatorToLinkIdMapping = {};
-        creatorToLinkIdMapping[CREATOR_DHRUV] = [process.env.REACT_APP_EXTERNAL_LINK_ID_1, process.env.REACT_APP_EXTERNAL_LINK_ID_2];
-        creatorToLinkIdMapping[CREATOR_AAKASH] = [process.env.REACT_APP_EXTERNAL_LINK_ID_3];
-        creatorToLinkIdMapping[CREATOR_MIKE] = [process.env.REACT_APP_EXTERNAL_LINK_ID_4];
-
-        function getUtmClicksForCreator(creator) {
-            return creatorToLinkIdMapping[creator].reduce(async (acc, linkId) => {
-                const linkAnalytics = await shortIoLinkAnalytics({ linkId });
-                return acc + linkAnalytics['totalClicks'];
-            }, 0);
-        }
-
-        resolve(
-            CREATOR_SPLIT.map((creator, index) => {
-                const { icon, title, metric } = creator;
-                return {
-                    id: index,
-                    thumbnail: icon,
-                    name: title,
-                    utm_clicks: 100, // getUtmClicksForCreator(title),
-                    creator_cost: currencyFormatter.format(metric),
-                    total_sales: 20,
-                    roi: percentFormatter.format(9999 / metric),
-                    platforms: ["YouTube", "TikTok"],
-                };
-            })
-        );
-    });
+    try {
+        const analyticsResults = await Promise.all(linkPromises);
+        return analyticsResults.reduce((acc, analytics) => acc + analytics['totalClicks'], 0);
+    } catch (error) {
+        console.error('Error fetching UTM clicks for creator:', error);
+        return 0;
+    }
 }
+
+async function getTotalSalesForCreator(storeId, promocodes) {
+    const linkPromises = promocodes.map(linkId => getPromocodeAnalytics({ storeId, linkId }));
+
+    try {
+        const analyticsResults = await Promise.all(linkPromises);
+        return analyticsResults.reduce((acc, analytics) => {
+            const amountFulfilled = analytics?.order_summary?.total_orders_amount_fulfilled ?? 0;
+            return acc + amountFulfilled;
+        }, 0);
+    } catch (error) {
+        console.error('Error fetching UTM clicks for creator:', error);
+        return 0;
+    }
+}
+
+const creatorToLinkIdMapping = {};
+creatorToLinkIdMapping[CREATOR_DHRUV] = [process.env.REACT_APP_EXTERNAL_LINK_ID_1, process.env.REACT_APP_EXTERNAL_LINK_ID_2];
+creatorToLinkIdMapping[CREATOR_AAKASH] = [process.env.REACT_APP_EXTERNAL_LINK_ID_3];
+creatorToLinkIdMapping[CREATOR_MIKE] = [process.env.REACT_APP_EXTERNAL_LINK_ID_4];
+
+const creatorToPromocodeMapping = {};
+creatorToPromocodeMapping[CREATOR_DHRUV] = [process.env.REACT_APP_PROMOCODE_1, process.env.REACT_APP_PROMOCODE_2];
+creatorToPromocodeMapping[CREATOR_AAKASH] = [process.env.REACT_APP_PROMOCODE_3];
+creatorToPromocodeMapping[CREATOR_MIKE] = [process.env.REACT_APP_PROMOCODE_4];
+
+export async function getCreatorsData({ storeId }) {
+    const creatorDataPromises = CREATOR_SPLIT.map(async (creator, index) => {
+        const utm_clicks = await getUtmClicksForCreator(creatorToLinkIdMapping[creator.title]);
+        const total_sales = await getTotalSalesForCreator(storeId, creatorToPromocodeMapping[creator.title]);
+        return {
+            id: index,
+            thumbnail: creator.icon,
+            name: creator.title,
+            utm_clicks: utm_clicks,
+            creator_cost: creator.metric,
+            total_sales: total_sales,
+            roi: creator.metric !== 0 ? (total_sales / creator.metric) : 0,
+            platforms: ["YouTube", "TikTok"],  // Adjust as needed
+        };
+    });
+
+    try {
+        return await Promise.all(creatorDataPromises);
+    } catch (error) {
+        console.error('Error fetching creators data:', error);
+        throw error;
+    }
+}
+
 
 export async function getAllOrdersFromShopify() {
     const api = getShopifyAuthInstance("https://proxy.cors.sh/https://www.demoshoes.shop/admin/api/2023-10");

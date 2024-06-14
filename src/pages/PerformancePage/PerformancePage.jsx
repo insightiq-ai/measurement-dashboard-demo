@@ -93,7 +93,7 @@ export default function PerformancePage(props) {
         getPromocodeAnalytics({ storeId }).then(setAnalytics);
         getAttributionStatistics().then(setAttributionStatistics);
         getDashboardLinkMetrics().then(setDashboardLinkMetrics);
-        getCreatorsData().then((res) => {
+        getCreatorsData({ storeId }).then((res) => {
             if (!isEmpty(res)) {
                 setCreatorRows(res);
                 setTotalCreatorRows(res?.length);
@@ -209,7 +209,7 @@ export default function PerformancePage(props) {
 
     function renderCreatorCostCell(params) {
         const creator_cost = params.row["creator_cost"];
-        return creator_cost;
+        return currencyFormatter.format(creator_cost);
     }
 
     function renderTotalSalesCell(params) {
@@ -219,7 +219,7 @@ export default function PerformancePage(props) {
 
     function renderRoiCell(params) {
         const roi = params.row["roi"];
-        return roi;
+        return percentFormatter.format(roi);
     }
 
     function renderPlatformsCell(params) {
@@ -453,13 +453,12 @@ export default function PerformancePage(props) {
                             disableColumnMenu
                             disableSelectionOnClick
                             getRowId={(row) => row.id}
-                            initialState={{
-                                sorting: { sortModel },
-                            }}
-                            pagination
-                            paginationMode={"server"}
-                            sortingMode={"client"}
-                            sortingOrder={allowedSorts}
+                            // initialState={{
+                            //     sorting: { sortModel },
+                            // }}
+                            // pagination
+                            // sortingMode={"client"}
+                            // sortingOrder={allowedSorts}
                             sx={{
                                 "& .hideRightSeparator > .MuiDataGrid-columnSeparator": {
                                     display: "none",
