@@ -48,7 +48,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "PORT=3001 node import_script.js && react-scripts start",
+    "start": "node import_script.js && react-scripts start",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "build": "react-scripts build",
     "test": "react-scripts test",
