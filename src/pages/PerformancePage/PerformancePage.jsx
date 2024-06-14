@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./PerformancePage.scss";
 import SummaryMetrics from "../../components/SummaryComponents/SummaryMetrics/SummaryMetrics";
 import { TabSwitch } from "../../components";
-import { ALL_USERS, CREATORS, SUMMARY, UTM_LINKS } from "../../utils/constants";
+import { ALL_USERS, CREATORS, iconMapping, SUMMARY, UTM_LINKS } from "../../utils/constants";
 import TabPanel from "../../components/TabSwitch/TabPanel";
 import {
     getAllOrdersFromShopify,
@@ -198,33 +198,61 @@ export default function PerformancePage(props) {
     // Creators table
 
     function renderNameCell(params) {
-        const name = params.row["name"];
-        return name;
+        const { icon, title } = params.row;
+        return <div style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 16,
+        }}>
+            {icon}
+            <span className={'body-b'}>{title}</span>
+        </div>
     }
 
     function renderUtmClicksCell(params) {
-        const utm_clicks = params.row["utm_clicks"];
-        return params.row.utm_clicks;
+        let utm_clicks = '-';
+        if (!isEmpty(params.row.utm_clicks) && params.row.utm_clicks !== 0) {
+            utm_clicks = formatNumber(params.row.utm_clicks);
+        }
+        return <span className={'body-r'}>{utm_clicks}</span>;
     }
 
     function renderCreatorCostCell(params) {
-        const creator_cost = params.row["creator_cost"];
-        return currencyFormatter.format(creator_cost);
+        let creator_cost = '-';
+        if (!isEmpty(params.row.creator_cost) && params.row.creator_cost !== 0) {
+            creator_cost = currencyFormatter.format(params.row.creator_cost);
+        }
+        return <span className={'body-r'}>{creator_cost}</span>;
     }
 
     function renderTotalSalesCell(params) {
-        const total_sales = params.row["total_sales"];
-        return total_sales;
+        let total_sales = '-';
+        if (!isEmpty(params.row.total_sales) && params.row.total_sales !== 0) {
+            total_sales = formatNumber(params.row.total_sales);
+        }
+        return <span className={'body-r'}>{total_sales}</span>;
     }
 
     function renderRoiCell(params) {
-        const roi = params.row["roi"];
-        return percentFormatter.format(roi);
+        let roi = '-';
+        if (!isEmpty(params.row.roi) && params.row.roi !== 0) {
+            roi = formatNumber(params.row.roi);
+        }
+        return <span className={'body-b color-semantics-primary-success'}>{roi}</span>;
     }
 
     function renderPlatformsCell(params) {
-        const platforms = params.row["platforms"].join();
-        return platforms;
+        const platforms = params.row["platforms"];
+        if (isEmpty(platforms)) {
+            return <span className={'body-r'}>{'-'}</span>;
+        }
+
+        return <div style={{
+            display: 'flex',
+            gap: 4,
+        }}>
+            {platforms.map((platform) => iconMapping[platform])}
+        </div>;
     }
 
     const creatorColumns = [
@@ -236,7 +264,6 @@ export default function PerformancePage(props) {
             headerName: "Creator name",
             renderCell: renderNameCell,
             sortable: false,
-            flex: 1,
         },
         {
             ...commonHeaderProps,

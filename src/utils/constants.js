@@ -15,7 +15,15 @@ export const CREATOR_DHRUV = 'Dhruv';
 export const CREATOR_MIKE = 'Mike';
 
 export const CREATOR_SPLIT = [
-    { icon: <Icons.youtube_demo/>, title: CREATOR_DHRUV, metric: TOTAL_CREATOR_COST / 2 },
-    { icon: <Icons.instagram_demo/>, title: CREATOR_AAKASH, metric:  TOTAL_CREATOR_COST / 4 },
-    { icon: <Icons.twitter_demo/>, title: CREATOR_MIKE, metric:  TOTAL_CREATOR_COST / 4 }
+    { icon: <Icons.dhruv_demo/>, title: CREATOR_DHRUV, metric: TOTAL_CREATOR_COST / 2 },
+    { icon: <Icons.aakash_demo/>, title: CREATOR_AAKASH, metric:  TOTAL_CREATOR_COST / 4 },
+    { icon: <Icons.mike_demo/>, title: CREATOR_MIKE, metric:  TOTAL_CREATOR_COST / 4 }
 ];
+
+export const iconMapping = {
+    YouTube: <Icons.youtube_demo/>,
+    TikTok: <Icons.tiktok_demo/>,
+    Instagram: <Icons.instagram_demo/>,
+    Twitter: <Icons.twitter_demo/>,
+    Facebook: <Icons.facebook_demo/>
+};

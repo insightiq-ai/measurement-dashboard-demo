@@ -160,19 +160,25 @@ creatorToPromocodeMapping[CREATOR_DHRUV] = [process.env.REACT_APP_PROMOCODE_1, p
 creatorToPromocodeMapping[CREATOR_AAKASH] = [process.env.REACT_APP_PROMOCODE_3];
 creatorToPromocodeMapping[CREATOR_MIKE] = [process.env.REACT_APP_PROMOCODE_4];
 
+const creatorToPlatformMapping = {};
+creatorToPlatformMapping[CREATOR_DHRUV] = ["YouTube", "TikTok"];
+creatorToPlatformMapping[CREATOR_AAKASH] = ["Instagram"];
+creatorToPlatformMapping[CREATOR_MIKE] = ["Twitter"];
+
 export async function getCreatorsData({ storeId }) {
     const creatorDataPromises = CREATOR_SPLIT.map(async (creator, index) => {
         const utm_clicks = await getUtmClicksForCreator(creatorToLinkIdMapping[creator.title]);
         const total_sales = await getTotalSalesForCreator(storeId, creatorToPromocodeMapping[creator.title]);
+        const {icon, title, metric} = creator;
         return {
             id: index,
-            thumbnail: creator.icon,
-            name: creator.title,
+            icon,
+            title,
             utm_clicks: utm_clicks,
-            creator_cost: creator.metric,
+            creator_cost: metric,
             total_sales: total_sales,
-            roi: creator.metric !== 0 ? (total_sales / creator.metric) : 0,
-            platforms: ["YouTube", "TikTok"],  // Adjust as needed
+            roi: metric !== 0 ? (total_sales / metric) : 0,
+            platforms: creatorToPlatformMapping[title],
         };
     });
 
