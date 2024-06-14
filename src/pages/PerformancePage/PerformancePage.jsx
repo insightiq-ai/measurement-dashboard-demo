@@ -53,26 +53,24 @@ export default function PerformancePage(props) {
 
     // Calculations - Summary
     const { order_summary } = analytics || {};
-    const totalSales = order_summary ? order_summary.total_orders_amount_fulfilled : null;
+    const totalSales = !isEmpty(order_summary) ? order_summary.total_orders_amount_fulfilled : null;
     const totalCreatorCost = TOTAL_CREATOR_COST;
     const averageCreatorCost = totalCreatorCost / NUMBER_OF_CREATORS;
-    const totalRoi = totalCreatorCost !== 0 ? totalSales / totalCreatorCost : null;
-    const totalEventsCaptured = attributionStatistics ? attributionStatistics.number_of_events : null;
+    const totalRoi = (!isEmpty(totalSales) && totalCreatorCost !== 0) ? totalSales / totalCreatorCost : null;
+    const totalEventsCaptured = !isEmpty(attributionStatistics) ? attributionStatistics.number_of_events : null;
     const totalOrders = !isEmpty(order_summary) ? order_summary.total_orders : null;
     const totalUsers = !isEmpty(attributionStatistics) ? attributionStatistics.number_of_users : null;
-    const averageEventsPerUser = !isEmpty(totalUsers) && totalUsers !== 0 ? totalEventsCaptured / totalUsers : null;
-    const averageOrdersPerUser = !isEmpty(totalUsers) && totalUsers !== 0 ? totalOrders / totalUsers : null;
-    const averageSalesPerUser = !isEmpty(totalUsers) && totalUsers !== 0 ? totalSales / totalUsers : null;
+    const averageEventsPerUser = (!isEmpty(totalEventsCaptured) && !isEmpty(totalUsers) && totalUsers !== 0) ? totalEventsCaptured / totalUsers : null;
+    const averageOrdersPerUser = (!isEmpty(totalOrders) && !isEmpty(totalUsers) && totalUsers !== 0) ? totalOrders / totalUsers : null;
+    const averageSalesPerUser = (!isEmpty(totalSales) && !isEmpty(totalUsers) && totalUsers !== 0) ? totalSales / totalUsers : null;
 
     // Calculations - UTM Links
     const totalLinkClicks = !isEmpty(dashboardLinkMetrics) ? dashboardLinkMetrics.total_clicks : null;
     const landingPageViews = !isEmpty(attributionStatistics) ? attributionStatistics.number_of_sessions : null;
     const clickThroughRate = (!isEmpty(totalLinkClicks) &&
-        totalLinkClicks !== 0 &&
         !isEmpty(landingPageViews) &&
         landingPageViews !== 0) ? totalLinkClicks / landingPageViews : null;
     const costPerLpv = (!isEmpty(totalCreatorCost) &&
-        totalCreatorCost !== 0 &&
         !isEmpty(landingPageViews) &&
         landingPageViews !== 0) ? (totalCreatorCost / landingPageViews) : null;
     const addToCarts = (!isEmpty(totalOrderCount) && !isEmpty(totalAbondonedCheckouts)) ?

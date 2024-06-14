@@ -38,7 +38,7 @@ export async function getDashboardLinkMetrics() {
 }
 
 export async function getUsers({ limit, offset }) {
-  const api = getBasicAuthInstance(process.env.REACT_APP_CLIENT_ID_DEV3, process.env.REACT_APP_CLIENT_SECRET_DEV3, "https://api3.dev.insightiq.ai");
+  const api = getBasicAuthInstance(process.env.REACT_APP_CLIENT_ID_PROD, process.env.REACT_APP_CLIENT_SECRET_PROD, "https://api.insightiq.ai");
 
   async function addEventTimestamp(users) {
     // Fetch events for all users concurrently
@@ -77,7 +77,7 @@ export async function getUsers({ limit, offset }) {
 }
 
 export async function getUserById({ userId }) {
-  const api = getBasicAuthInstance(process.env.REACT_APP_CLIENT_ID_DEV3, process.env.REACT_APP_CLIENT_SECRET_DEV3, "https://api3.dev.insightiq.ai");
+  const api = getBasicAuthInstance(process.env.REACT_APP_CLIENT_ID_PROD, process.env.REACT_APP_CLIENT_SECRET_PROD, "https://api.insightiq.ai");
   try {
     const response = await api.get(`v1/measurement/users/${userId}`);
     return response.data;
@@ -87,7 +87,7 @@ export async function getUserById({ userId }) {
 }
 
 export async function getUserEvents({ userId, limit, offset }) {
-  const api = getBasicAuthInstance(process.env.REACT_APP_CLIENT_ID_DEV3, process.env.REACT_APP_CLIENT_SECRET_DEV3, "https://api3.dev.insightiq.ai");
+  const api = getBasicAuthInstance(process.env.REACT_APP_CLIENT_ID_PROD, process.env.REACT_APP_CLIENT_SECRET_PROD, "https://api.insightiq.ai");
   try {
     const response = await api.get(`v1/measurement/attribution/events?user_id=${userId}&limit=${limit}&offset=${offset}`);
     return response.data.data;
