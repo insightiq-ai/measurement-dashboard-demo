@@ -20,8 +20,11 @@ export default function UserJourneyPage() {
         getUserById({ userId }).then(setUser);
         getUserEvents({ userId, limit: 1 }).then(setUserEvents);
         getTotalOrderPerAUID(userId).then((res) => {
-            setTotalOrderValuePerUser(!isEmpty(res?.summaries[0].order_total) ? res?.summaries[0].order_total : null);
-            setOrdersPlaced(!isEmpty(res?.summaries[0].number_of_orders) ? res?.summaries[0].number_of_orders : null);
+            if (isEmpty(res?.summaries)) {
+                return;
+            }
+            setTotalOrderValuePerUser(!isEmpty(res?.summaries[0]?.order_total) ? res?.summaries[0]?.order_total : null);
+            setOrdersPlaced(!isEmpty(res?.summaries[0]?.number_of_orders) ? res?.summaries[0]?.number_of_orders : null);
         });
     }, [userId]);
 
@@ -31,16 +34,19 @@ export default function UserJourneyPage() {
             TikTok: 0,
             Instagram: 0,
             Twitter: 0,
+            Facebook: 0,
         };
 
         data.forEach((item) => {
             const medium = item.utm_medium;
             const normalizedMedium = medium?.toLowerCase();
 
-            if (normalizedMedium === "youtube" || normalizedMedium === "tiktok" || normalizedMedium === "instagram" || normalizedMedium === "twitter") {
+            if (normalizedMedium === "youtube" || normalizedMedium === "tiktok" || normalizedMedium === "instagram" || normalizedMedium === "twitter" || normalizedMedium === "facebook") {
                 mediumCounts[medium]++;
             } else if (normalizedMedium === "x") {
                 mediumCounts["Twitter"]++; // Assuming 'X' counts as 'Twitter' based on previous context
+            } else if (normalizedMedium === "meta") {
+                mediumCounts["Facebook"]++; // Assuming 'X' counts as 'Twitter' based on previous context
             }
         });
 
@@ -54,9 +60,10 @@ export default function UserJourneyPage() {
 
         const iconMapping = {
             YouTube: <Icons.youtube_demo/>,
-            TikTok: <Icons.twitter_demo/>,
+            TikTok: <Icons.tiktok_demo/>,
             Instagram: <Icons.instagram_demo/>,
             Twitter: <Icons.twitter_demo/>,
+            Facebook: <Icons.facebook_demo />
         };
 
         for (const medium in mediumCounts) {
@@ -64,7 +71,7 @@ export default function UserJourneyPage() {
                 mediumWeights.push({
                     icon: iconMapping[medium],  // Map the medium to its corresponding icon
                     title: medium,
-                    metric: '-'  // Optional: rounding the value to keep it clean
+                    metric: '-'
                 });
             } else {
                 // Calculate the proportion of each medium

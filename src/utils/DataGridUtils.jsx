@@ -56,7 +56,7 @@ export function getSortedHeaderClass(sortModel, field) {
     if (!sortModel || sortModel.length === 0) {
         return '';
     }
-    if (sortModel[0].field === field) {
+    if (sortModel[0]?.field === field) {
         return 'sorted-header-special';
     }
     return '';
