@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./PerformancePage.scss";
 import SummaryMetrics from "../../components/SummaryComponents/SummaryMetrics/SummaryMetrics";
-import { TabSwitch } from "../../components";
+import { Icons, TabSwitch, TextBox } from "../../components";
 import { ALL_USERS, CREATORS, iconMapping, SUMMARY, UTM_LINKS } from "../../utils/constants";
 import TabPanel from "../../components/TabSwitch/TabPanel";
 import {
@@ -16,7 +16,6 @@ import {
 import { convertTimeToLocale, currencyFormatter, formatNumber, isEmpty, percentFormatter } from "../../utils/util";
 import UtmLinksMetrics from "../../components/UtmLinksComponents/UtmLinksMetrics/UtmLinksMetrics";
 import Grid from "../../components/Grid/Grid";
-import { Icons } from "../../components";
 import { CustomFooter, getSortedHeaderClass } from "../../utils/DataGridUtils";
 import { DataGrid } from "@mui/x-data-grid";
 import { Colors } from "../../styles/colors";
@@ -89,6 +88,7 @@ export default function PerformancePage(props) {
     const [creatorRows, setCreatorRows] = useState([]);
     const defaultSortModel = [{ field: "roi", sort: "desc" }];
     const [sortModel, setSortModel] = useState(defaultSortModel);
+    const [searchUserIdText, setSearchUserIdText] = useState(null);
 
     useEffect(() => {
         const storeId = process.env.REACT_APP_STORE_ID;
@@ -117,12 +117,13 @@ export default function PerformancePage(props) {
         getUsers({
             limit: PAGE_SIZE,
             offset: pageNumber * PAGE_SIZE,
+            userId: searchUserIdText,
         })
             .then(setUserRows)
             .finally(() => {
                 setUserGridLoading(false);
             });
-    }, [sortModel, pageNumber]);
+    }, [sortModel, pageNumber, searchUserIdText]);
 
     useEffect(() => {
         if (!isEmpty(attributionStatistics)) {
@@ -139,11 +140,11 @@ export default function PerformancePage(props) {
     function renderIdCell(params) {
         let id = '-', icon = null;
         const icons = [
-            <Icons.avatar1_demo />,
-            <Icons.avatar2_demo />,
-            <Icons.avatar3_demo />,
-            <Icons.avatar4_demo />,
-            <Icons.avatar5_demo />,
+            <Icons.avatar1_demo/>,
+            <Icons.avatar2_demo/>,
+            <Icons.avatar3_demo/>,
+            <Icons.avatar4_demo/>,
+            <Icons.avatar5_demo/>,
         ];
         if (!isEmpty(params.row.id)) {
             id = params.row.id;
@@ -169,9 +170,19 @@ export default function PerformancePage(props) {
     function renderDeviceCountCell(params) {
         let number_of_fingerprints = '-';
         if (!isEmpty(params.row.number_of_fingerprints) && params.row.number_of_fingerprints !== 0) {
-            number_of_fingerprints = formatNumber(params.row.number_of_fingerprints);
+            number_of_fingerprints = (params.row.number_of_fingerprints === 1) ?
+                `${formatNumber(params.row.number_of_fingerprints)} device` :
+                `${formatNumber(params.row.number_of_fingerprints)} devices`;
         }
         return <span className={'body-r'}>{number_of_fingerprints}</span>;
+    }
+
+    function renderNumberofSessionsCell(params) {
+        let number_of_sessions = '-';
+        if (!isEmpty(params.row.number_of_sessions) && params.row.number_of_sessions !== 0) {
+            number_of_sessions = formatNumber(params.row.number_of_sessions);
+        }
+        return <span className={'body-r'}>{number_of_sessions}</span>;
     }
 
     function renderLastActiveCell(params) {
@@ -205,7 +216,7 @@ export default function PerformancePage(props) {
             headerName: "Events collected",
             renderCell: renderEventsCell,
             sortable: false,
-            flex: 0.5
+            flex: 0.3
         },
         {
             ...commonHeaderProps,
@@ -220,13 +231,23 @@ export default function PerformancePage(props) {
         {
             ...commonHeaderProps,
             align: "right",
+            field: "number_of_sessions",
+            headerAlign: "right",
+            headerName: "# of sessions",
+            renderCell: renderNumberofSessionsCell,
+            sortable: false,
+            flex: 0.3
+        },
+        {
+            ...commonHeaderProps,
+            align: "right",
             field: "updated_at",
             headerAlign: "right",
-            headerName: "Last active on",
+            headerName: "Last updated on",
             renderCell: renderLastActiveCell,
             // headerClassName: `${commonHeaderProps.headerClassName} ${getSortedHeaderClass(sortModel, 'updated_at')}`,
             sortable: false,
-            flex: 0.6
+            flex: 0.5
         },
     ];
 
@@ -271,7 +292,7 @@ export default function PerformancePage(props) {
     function renderRoiCell(params) {
         let roi = '-';
         if (!isEmpty(params.row.roi) && params.row.roi !== 0) {
-            roi = formatNumber(params.row.roi);
+            roi = `${formatNumber(params.row.roi)}%`;
         }
         return <span className={'body-b color-semantics-primary-success'}>{roi}</span>;
     }
@@ -299,6 +320,7 @@ export default function PerformancePage(props) {
             headerName: "Creator name",
             renderCell: renderNameCell,
             sortable: false,
+            flex: 0.7
         },
         {
             ...commonHeaderProps,
@@ -309,6 +331,7 @@ export default function PerformancePage(props) {
             renderCell: renderUtmClicksCell,
             headerClassName: `${commonHeaderProps.headerClassName} ${getSortedHeaderClass(sortModel, "utm_clicks")}`,
             sortable: true,
+            flex: 0.4
         },
         {
             ...commonHeaderProps,
@@ -319,6 +342,7 @@ export default function PerformancePage(props) {
             renderCell: renderCreatorCostCell,
             headerClassName: `${commonHeaderProps.headerClassName} ${getSortedHeaderClass(sortModel, "creator_cost")}`,
             sortable: true,
+            flex: 0.4
         },
         {
             ...commonHeaderProps,
@@ -329,6 +353,7 @@ export default function PerformancePage(props) {
             renderCell: renderTotalSalesCell,
             headerClassName: `${commonHeaderProps.headerClassName} ${getSortedHeaderClass(sortModel, "total_sales")}`,
             sortable: true,
+            flex: 0.4
         },
         {
             ...commonHeaderProps,
@@ -339,6 +364,7 @@ export default function PerformancePage(props) {
             renderCell: renderRoiCell,
             headerClassName: `${commonHeaderProps.headerClassName} ${getSortedHeaderClass(sortModel, "roi")}`,
             sortable: true,
+            flex: 0.5
         },
         {
             ...commonHeaderProps,
@@ -349,6 +375,7 @@ export default function PerformancePage(props) {
             renderCell: renderPlatformsCell,
             // headerClassName: `${commonHeaderProps.headerClassName} ${getSortedHeaderClass(sortModel, 'updated_at')}`,
             sortable: false,
+            flex: 1
         },
     ];
     const allowedSorts = ["desc", "asc"];
@@ -479,6 +506,13 @@ export default function PerformancePage(props) {
                     />
                 </div>
                 <TabPanel index={ALL_USERS} value={tableViewCurrTab} sx={{ margin: "0px", padding: "0px" }}>
+                    <div className={'div-all-users-search-container'}>
+                        <TextBox variant={'default-with-search-icon'}
+                                 placeholder={'Search User ID'}
+                                 onEnter={setSearchUserIdText}
+                                 value={searchUserIdText}
+                                 onClear={() => setSearchUserIdText("")}/>
+                    </div>
                     <Grid
                         gridProps={{
                             columns: userColumns,

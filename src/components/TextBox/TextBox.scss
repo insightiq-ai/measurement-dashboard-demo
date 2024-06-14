@@ -1,0 +1,45 @@
+.text-box-container {
+  display: flex;
+  width: 360px;
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input::placeholder {
+    color: var(--neutrals-secondary-grey, #5A5A67) !important;
+    font-family: Inter !important;
+    font-size: 16px !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    line-height: 150% !important;
+    opacity: 1;
+  }
+
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+}
+
+.search-icon {
+  font-size: 20px;
+  color: var(--neutrals-secondary-grey);
+}
+
+.text-box-text-field {
+  flex: 1;
+}
+
+.clear-icon {
+  cursor: pointer;
+  color: var(--neutrals-secondary-grey);
+}
+
+.span-end-adornment {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  cursor: pointer;
+}

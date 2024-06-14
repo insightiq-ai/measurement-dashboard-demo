@@ -10,9 +10,9 @@ export const CREATORS = 'Creators';
 export const TOTAL_CREATOR_COST = 2000;
 export const NUMBER_OF_CREATORS = 3;
 
-export const CREATOR_AAKASH = 'Aakash';
-export const CREATOR_DHRUV = 'Dhruv';
-export const CREATOR_MIKE = 'Mike';
+export const CREATOR_AAKASH = 'Aakash Mehta';
+export const CREATOR_DHRUV = 'Dhruv Kapuria';
+export const CREATOR_MIKE = 'Mike Lee';
 
 export const CREATOR_SPLIT = [
     { icon: <Icons.dhruv_demo/>, title: CREATOR_DHRUV, metric: TOTAL_CREATOR_COST / 2 },

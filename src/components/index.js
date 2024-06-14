@@ -8,4 +8,5 @@ import Loader from './Loader/Loader.jsx';
 import PerformanceMetric from './PerformanceMetric/PerformanceMetric.jsx';
 import TabPanel from './TabSwitch/TabPanel.jsx';
 import TabSwitch from './TabSwitch/TabSwitch.jsx';
-export {EventJourney, Grid, Icons, IntermediateLoader, InvertedPrimaryButton, LeftMainMetric, Loader, PerformanceMetric, TabPanel, TabSwitch};
+import TextBox from './TextBox/TextBox.jsx';
+export {EventJourney, Grid, Icons, IntermediateLoader, InvertedPrimaryButton, LeftMainMetric, Loader, PerformanceMetric, TabPanel, TabSwitch, TextBox};

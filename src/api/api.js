@@ -38,7 +38,7 @@ export async function getDashboardLinkMetrics() {
     }
 }
 
-export async function getUsers({ limit, offset }) {
+export async function getUsers({ limit, offset, userId }) {
     const api = getBasicAuthInstance(process.env.REACT_APP_CLIENT_ID_PROD, process.env.REACT_APP_CLIENT_SECRET_PROD, "https://api.insightiq.ai");
 
     async function addEventTimestamp(users) {

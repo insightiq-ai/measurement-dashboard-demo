@@ -109,6 +109,10 @@ export default function UserJourneyPage() {
                 </div>
                 {userEvents?.length > 0 && (
                     <div className={"div-top-container-user-journey"}>
+                        <div className={'title'} style={{
+                            display: "flex",
+                            gap: "24px",
+                        }}>{`Hello, ${userId}`}</div>
                         <AggregateMetrics user={user} userEvents={userEvents[0]}/>
                         <UserMetrics
                             user={user}
