@@ -1,0 +1,41 @@
+@import "../../styles/insightIq.scss";
+
+.div-performance-page {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  padding-top: 49px;
+  padding-bottom: 86px;
+
+  .section-metrics {
+    padding-top: 16px;
+    padding-bottom: 48px;
+  }
+
+  .div-page-title {
+    display: flex;
+    //padding: 16px 0px 48px 0px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    //align-self: stretch;
+  }
+}
+
+.MuiDataGrid-row {
+  cursor: default;
+}
+
+.grid-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.table-view-tab-switch-container {
+  display: flex;
+  border-bottom: 2px solid #E5E5E8;
+  margin: 0 0px 48px;
+}
+

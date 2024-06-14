@@ -1,0 +1,48 @@
+@import "../../../styles/insightIq";
+
+.div-left-metrics-utmlinks {
+  display: flex;
+  width: 465px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 77px;
+  flex-shrink: 0;
+
+  .div-main-metric-utmlinks {
+    display: flex;
+    padding-right: 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+
+    .div-metric-and-title-utmlinks {
+      display: flex;
+      padding-right: 16px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+
+      .div-metric-utmlinks {
+        color: var(--Neutrals-Primary-Grey, #121B2E);
+        text-align: center;
+        font-family: Inter;
+        font-size: 40px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+        letter-spacing: -0.4px;
+      }
+
+      .div-title-utmlinks {
+        @extend .color-neutrals-secondary-grey;
+        @extend .section-heading;
+      }
+    }
+  }
+
+  .div-sub-metric-utmlinks {
+    display: flex;
+    align-items: flex-start;
+    gap: 48px;
+  }
+}

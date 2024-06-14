@@ -1,0 +1,13 @@
+.inverted-button-container {
+  color: var(--main-primary);
+  background-color: #ffffff;
+  border-radius: 4px;
+  border: 1.5px solid var(--main-primary);
+  min-height: 36px;
+  font-weight: 600;
+  min-width: 90px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}

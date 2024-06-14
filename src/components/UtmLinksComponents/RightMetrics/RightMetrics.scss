@@ -1,0 +1,24 @@
+.div-right-metrics-utmlinks {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 32px;
+  position: relative;
+
+
+  .div-right-single-metric-utmlinks {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    align-self: stretch;
+  }
+
+  .vertical-line-utmlinks {
+    width: 2px;
+    height: 50px; /* Adjusted to fixed value as needed */
+    background: #E5E5E8;
+    position: absolute;
+    left: 11px;
+    margin-top: -8px;
+  }
+}

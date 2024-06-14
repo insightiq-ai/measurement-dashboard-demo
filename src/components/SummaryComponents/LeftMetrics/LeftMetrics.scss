@@ -1,0 +1,15 @@
+.div-left-metrics-summary {
+  display: flex;
+  padding: 40px 48px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 67px;
+  border-radius: 6px;
+  border: 1px solid var(--Neutrals-Border-grey, #E5E5E8);
+
+  .div-sub-metric-summary {
+    display: flex;
+    align-items: flex-start;
+    gap: 48px;
+  }
+}

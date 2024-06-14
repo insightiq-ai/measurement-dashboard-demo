@@ -2,14 +2,37 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="icon" href="%PUBLIC_URL%/insightiqFavicon.ico" />
+    <link rel="shortcut icon" href="insightiqFavicon.ico" type="image/x-icon" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta
-      name="description"
-      content="Web site created using create-react-app"
+      property="og:description"
+      content="Register for the insightIQ dashboard where you can discover influencers from our huge database of 250M+ creators across Instagram, TikTok, YouTube and analyze their profiles using 50+ data points."
     />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <meta property="og:site_name" content="insightIQ Dashboard" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/insightiqFavicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tonsky/FiraCode@5/distr/fira_code.css" />
+    <script src="https://cdn.getphyllo.com/connect/v2/phyllo-connect.js"></script>
+
+    <script>
+      /**
+       * If browser back button was used, flush cache
+       * This ensures that user will always see an accurate, up-to-date view based on their state
+       * https://stackoverflow.com/questions/8788802/prevent-safari-loading-from-cache-when-back-button-is-clicked
+       */
+      (function () {
+        window.onpageshow = function (event) {
+          if (event.persisted) {
+            window.location.reload();
+          }
+        };
+      })();
+    </script>
+    <!-- <script src="https://theapicompany.com/deviceAPI.js?id=deviceAPI-qi9853j3if"></script> -->
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
@@ -24,10 +47,15 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+    <title>insightIQ — Gateway to creator data</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NN6M9F3" height="0" width="0" style="display: none; visibility: hidden"></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <div id="root"></div>
     <!--
       This HTML file is a template.

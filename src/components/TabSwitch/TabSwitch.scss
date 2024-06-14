@@ -1,0 +1,88 @@
+.tab-switch-container {
+  button {
+    border-radius: 1000px;
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 19px;
+    letter-spacing: 0em;
+    text-align: left;
+    text-transform: none;
+    color: var(--main-primary) !important;
+    min-height: 0px !important;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    min-width: 57px;
+  }
+
+  button:hover {
+    background: #fff;
+  }
+
+  .MuiTabs-indicator {
+    display: none;
+  }
+
+  .Mui-selected {
+    color: var(--main-primary) !important;
+    background: #fff;
+  }
+
+  .Mui-selected:hover {
+    box-shadow: none;
+  }
+
+  .MuiTabs-flexContainer {
+    gap: 4px;
+  }
+}
+
+.tab-switch {
+  background-color: var(--main-secondary);
+  border-radius: 1000px;
+  padding: 4px;
+  margin-bottom: 40px;
+}
+
+.tab-switch-container.padding {
+  button {
+    padding: 0px 24px 0px 16px !important;
+    height: 52px !important;
+  }
+}
+
+.underline-tab-container {
+  button {
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 19px;
+    letter-spacing: 0em;
+    text-align: left;
+    text-transform: none;
+    color: var(--neutrals-secondary-grey) !important;
+    min-height: 0px !important;
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    padding: 18px 25px;
+  }
+
+  .MuiTabs-indicator {
+    background-color: var(--main-primary) !important;
+  }
+
+  .Mui-selected {
+    color: var(--main-primary) !important;
+    background: #fff;
+  }
+
+  .Mui-selected:hover {
+    box-shadow: none;
+  }
+
+  .MuiTabs-flexContainer {
+    gap: 4px;
+  }
+}
