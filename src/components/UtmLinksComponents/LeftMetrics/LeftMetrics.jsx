@@ -1,9 +1,10 @@
 import React from 'react';
 import { PerformanceMetric, Icons } from "../../index";
 import './LeftMetrics.scss';
+import { Tooltip } from "@material-ui/core";
 
 export default function LeftMetrics({ mainMetric, subMetrics }) {
-    const { value: mainMetricValue, title: mainMetricTitle } = mainMetric;
+    const { value: mainMetricValue, title: mainMetricTitle, tooltip } = mainMetric;
     return (
         <div className={'div-left-metrics-utmlinks'}>
             <div className={'div-main-metric-utmlinks'}>
@@ -14,6 +15,9 @@ export default function LeftMetrics({ mainMetric, subMetrics }) {
                     </div>
                     <div className={'div-title-utmlinks'}>
                         {mainMetricTitle}
+                        {tooltip && <Tooltip placement='right-end' title={tooltip}>
+                            <i className="ri-information-line info-icon"></i>
+                        </Tooltip>}
                     </div>
                 </div>
             </div>

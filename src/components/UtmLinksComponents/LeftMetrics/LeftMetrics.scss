@@ -36,6 +36,16 @@
       .div-title-utmlinks {
         @extend .color-neutrals-secondary-grey;
         @extend .section-heading;
+        display: flex;
+        flex-direction: row;
+        gap: 4px;
+        align-items: center;
+
+        .info-icon {
+          color: var(--neutrals-secondary-grey);
+          font-size: 16px;
+          font-weight: normal;
+        }
       }
     }
   }

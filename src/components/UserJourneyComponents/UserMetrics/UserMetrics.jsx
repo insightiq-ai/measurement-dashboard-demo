@@ -19,11 +19,12 @@ export default function UserMetrics({ creatorSplit, platformSplit, totalOrderVal
             <div className={'div-user-metrics-box'}>
                 <div className="div-user-metric-item item-1">
                     <LeftMainMetric mainMetricTitle={'Total order value'}
-                                    mainMetricValue={totalOrderValue}/>
+                                    mainMetricValue={totalOrderValue}
+                                    tooltip={'Tooltip'}/>
                     <PerformanceMetric
                         key={0}
                         variant={'infoMetricIcon'}
-                        metricIcon={<i className="ri-computer-line"></i>}
+                        metricIcon={<i className="ri-archive-2-line"></i>}
                         content={ordersPlaced}
                         metricName={'Orders placed'}
                     />

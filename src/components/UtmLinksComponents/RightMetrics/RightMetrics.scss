@@ -11,6 +11,11 @@
     align-items: center;
     gap: 16px;
     align-self: stretch;
+
+    .performance-metric-icon {
+      color: var(--neutrals-secondary-grey);
+      font-size: 24px;
+    }
   }
 
   .vertical-line-utmlinks {

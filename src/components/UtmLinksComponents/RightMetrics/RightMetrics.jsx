@@ -9,7 +9,7 @@ export default function RightMetrics({ rightMetrics }) {
                 return (
                     <div key={index}>
                         <div className={'div-right-single-metric-utmlinks'}>
-                            {icon}
+                            <span className={'performance-metric-icon'}>{icon}</span>
                             <PerformanceMetric
                                 variant={'infoIcon'}
                                 content={value}

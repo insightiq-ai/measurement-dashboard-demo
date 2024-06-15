@@ -5,7 +5,15 @@ import * as PropTypes from "prop-types";
 import { isEmpty } from "../../utils/util";
 // variant  -> See propTypes below
 
-export default function PerformanceMetric({ variant, metricIcon, content, metricName, tooltip, subtitle, additionalStyles }) {
+export default function PerformanceMetric({
+                                              variant,
+                                              metricIcon,
+                                              content,
+                                              metricName,
+                                              tooltip,
+                                              subtitle,
+                                              additionalStyles
+                                          }) {
 
     if (content === "null" || content === null) {
         content = "-"
@@ -15,7 +23,7 @@ export default function PerformanceMetric({ variant, metricIcon, content, metric
     const InfoIcon = () => {
         return (
             <div>
-                <div className='metric-content'>{content}</div>
+                <div className='metric-content metric-text'>{content}</div>
                 <div className='info-name-container'>
                     {metricName}
                     {tooltip && <Tooltip placement='right-end' title={tooltip}>
@@ -28,7 +36,10 @@ export default function PerformanceMetric({ variant, metricIcon, content, metric
     const InfoMetricIcon = () => {
         return (
             <div>
-                <div className='metric-content'>{metricIcon}{content}</div>
+                <div className='metric-content'>
+                    <span className={'performance-metric-icon'}>{metricIcon}</span>
+                    <span className={'metric-text'}>{content}</span>
+                </div>
                 <div className='info-name-container'>
                     {metricName}
                     {tooltip && <Tooltip placement='right-end' title={tooltip}>
@@ -41,7 +52,10 @@ export default function PerformanceMetric({ variant, metricIcon, content, metric
     const MetricIcon = () => {
         return (
             <div>
-                <div className='metric-content'>{metricIcon}{content}</div>
+                <div className='metric-content'>
+                    <span className={'performance-metric-icon'}>{metricIcon}</span>
+                    <span className={'metric-text'}>{content}</span>
+                </div>
                 <div className='info-name-container'>{metricName} </div>
             </div>
         )
@@ -50,7 +64,7 @@ export default function PerformanceMetric({ variant, metricIcon, content, metric
     const DefaultComp = () => {
         return (
             <div>
-                <div className='metric-content'>{content}</div>
+                <div className='metric-content metric-text'>{content}</div>
                 <div className='info-name-container'>{metricName}</div>
             </div>
         )
