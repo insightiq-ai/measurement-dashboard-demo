@@ -11,6 +11,7 @@ import {
     getCreatorsData,
     getDashboardLinkMetrics,
     getPromocodeAnalytics,
+    getUserById,
     getUsers,
 } from "../../api/api";
 import { convertTimeToLocale, currencyFormatter, formatNumber, isEmpty, percentFormatter } from "../../utils/util";
@@ -112,18 +113,39 @@ export default function PerformancePage(props) {
         });
     }, []);
 
-    useEffect(() => {
+    function fetchUsers() {
         setUserGridLoading(true);
         getUsers({
             limit: PAGE_SIZE,
             offset: pageNumber * PAGE_SIZE,
-            userId: searchUserIdText,
         })
             .then(setUserRows)
             .finally(() => {
                 setUserGridLoading(false);
             });
-    }, [sortModel, pageNumber, searchUserIdText]);
+    }
+
+    useEffect(fetchUsers, [sortModel, pageNumber]);
+
+    useEffect(() => {
+        if (isEmpty(searchUserIdText)) {
+            fetchUsers();
+        } else {
+            setUserGridLoading(true);
+            getUserById({ userId: searchUserIdText }).then((res) => {
+                if (isEmpty(res)) {
+                    setUserRows([]);
+                    setTotalUserRows(0);
+                } else {
+                    setUserRows([res]);
+                    setTotalUserRows(1);
+                }
+            }).catch((error) => {
+                setUserRows([]);
+                setTotalUserRows(0);
+            }).finally(() => setUserGridLoading(false));
+        }
+    }, [searchUserIdText]);
 
     useEffect(() => {
         if (!isEmpty(attributionStatistics)) {

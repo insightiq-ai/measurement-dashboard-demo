@@ -1,6 +1,6 @@
 import { getBasicAuthInstance, getShopifyAuthInstance } from "./axiosInstance";
 import { CREATOR_AAKASH, CREATOR_DHRUV, CREATOR_MIKE, CREATOR_SPLIT } from "../utils/constants";
-import { currencyFormatter, isEmpty, percentFormatter } from "../utils/util";
+import { isEmpty } from "../utils/util";
 
 const axios = require("axios");
 
@@ -38,8 +38,7 @@ export async function getDashboardLinkMetrics() {
     }
 }
 
-export async function getUsers({ limit, offset, userId }) {
-    const api = getBasicAuthInstance(process.env.REACT_APP_CLIENT_ID_PROD, process.env.REACT_APP_CLIENT_SECRET_PROD, "https://api.insightiq.ai");
+export async function getUsers({ limit, offset }) {
 
     async function addEventTimestamp(users) {
         // Fetch events for all users concurrently
@@ -66,6 +65,7 @@ export async function getUsers({ limit, offset, userId }) {
         }
     }
 
+    const api = getBasicAuthInstance(process.env.REACT_APP_CLIENT_ID_PROD, process.env.REACT_APP_CLIENT_SECRET_PROD, "https://api.insightiq.ai");
     try {
         const response = await api.get(`v1/measurement/users?list_anonymous_users=true&list_users_with_no_events=true&limit=${limit}&offset=${offset}`);
         const users = response.data;
@@ -91,9 +91,10 @@ export async function getUserEvents({ userId, limit, offset }) {
     const api = getBasicAuthInstance(process.env.REACT_APP_CLIENT_ID_PROD, process.env.REACT_APP_CLIENT_SECRET_PROD, "https://api.insightiq.ai");
     try {
         const response = await api.get(`v1/measurement/attribution/events?user_id=${userId}&limit=${limit}&offset=${offset}`);
-        return response.data.data;
+        return response.data?.data;
     } catch (error) {
         console.log(error);
+        throw error;
     }
 }
 
@@ -169,7 +170,7 @@ export async function getCreatorsData({ storeId }) {
     const creatorDataPromises = CREATOR_SPLIT.map(async (creator, index) => {
         const utm_clicks = await getUtmClicksForCreator(creatorToLinkIdMapping[creator.title]);
         const total_sales = await getTotalSalesForCreator(storeId, creatorToPromocodeMapping[creator.title]);
-        const {icon, title, metric} = creator;
+        const { icon, title, metric } = creator;
         return {
             id: index,
             icon,

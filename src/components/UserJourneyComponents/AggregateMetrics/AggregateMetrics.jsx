@@ -6,7 +6,7 @@ import './AggregateMetrics.scss';
 export default function AggregateMetrics({ user, userEvents }) {
     const totalEventsCollected = !isEmpty(user?.number_of_events) ? formatNumber(user?.number_of_events) : '-';
     const deviceCount = !isEmpty(user?.number_of_fingerprints) ? formatNumber(user?.number_of_fingerprints) : '-';
-    const lastActiveOn = !isEmpty(userEvents?.event_timestamp) ? convertTimeToLocale(userEvents?.event_timestamp) : '-';
+    const lastActiveOn = !isEmpty(userEvents) && !isEmpty(userEvents[0]?.event_timestamp) ? convertTimeToLocale(userEvents[0]?.event_timestamp) : '-';
 
     return (
         <div className={'div-aggregate-metrics'}>

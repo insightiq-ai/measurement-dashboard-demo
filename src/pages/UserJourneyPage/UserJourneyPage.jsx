@@ -3,13 +3,12 @@ import "./UserJourneyPage.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import AggregateMetrics from "../../components/UserJourneyComponents/AggregateMetrics/AggregateMetrics";
 import { getTotalOrderPerAUID, getUserById, getUserEvents } from "../../api/api";
-import { isEmpty } from "../../utils/util";
+import { currencyFormatter, formatNumber, isEmpty } from "../../utils/util";
 import UserMetrics from "../../components/UserJourneyComponents/UserMetrics/UserMetrics";
 import { EventJourney } from "../../components";
 import InvertedPrimaryButton from "../../components/InvertedPrimaryButton/InvertedPrimaryButton";
 import IntermediateLoader from "../../components/IntermediateLoader/IntermediateLoader";
 import { iconMapping } from "../../utils/constants";
-import { currencyFormatter, formatNumber } from "../../utils/util";
 
 export default function UserJourneyPage() {
     const navigate = useNavigate();
@@ -25,8 +24,10 @@ export default function UserJourneyPage() {
     useEffect(() => {
         getUserById({ userId }).then(setUser);
         getUserEvents({ userId, limit: 10, offset }).then((result) => {
-            setUserEvents(result);
-            setCountOfFetchedRecords(result.length);
+            if (!isEmpty(result)) {
+                setUserEvents(result);
+                setCountOfFetchedRecords(result.length);
+            }
         });
         getTotalOrderPerAUID(userId).then((res) => {
             if (isEmpty(res?.summaries)) {
@@ -107,21 +108,19 @@ export default function UserJourneyPage() {
                         }}
                     ></i>
                 </div>
-                {userEvents?.length > 0 && (
-                    <div className={"div-top-container-user-journey"}>
-                        <div className={'title'} style={{
-                            display: "flex",
-                            gap: "24px",
-                        }}>{`Hello, ${userId}`}</div>
-                        <AggregateMetrics user={user} userEvents={userEvents[0]}/>
-                        <UserMetrics
-                            user={user}
-                            platformSplit={splitOrderValueByMedium(userEvents, totalOrderValuePerUser)}
-                            ordersPlaced={isEmpty(ordersPlaced) || ordersPlaced === 0 ? '-' : formatNumber(ordersPlaced)}
-                            totalOrderValue={isEmpty(totalOrderValuePerUser) || totalOrderValuePerUser === 0 ? '-' : currencyFormatter.format(totalOrderValuePerUser)}
-                        />
-                    </div>
-                )}
+                <div className={"div-top-container-user-journey"}>
+                    <div className={'title'} style={{
+                        display: "flex",
+                        gap: "24px",
+                    }}>{`Hello, ${userId}`}</div>
+                    <AggregateMetrics user={user} userEvents={userEvents}/>
+                    <UserMetrics
+                        user={user}
+                        platformSplit={splitOrderValueByMedium(userEvents, totalOrderValuePerUser)}
+                        ordersPlaced={isEmpty(ordersPlaced) || ordersPlaced === 0 ? '-' : formatNumber(ordersPlaced)}
+                        totalOrderValue={isEmpty(totalOrderValuePerUser) || totalOrderValuePerUser === 0 ? '-' : currencyFormatter.format(totalOrderValuePerUser)}
+                    />
+                </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "48px" }}>
                     <span className="event-journey-header">Your event journey</span>
                     <EventJourney userEvents={userEvents}/>
