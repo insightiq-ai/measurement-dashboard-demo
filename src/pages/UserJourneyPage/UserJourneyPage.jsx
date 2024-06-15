@@ -8,12 +8,13 @@ import UserMetrics from "../../components/UserJourneyComponents/UserMetrics/User
 import { EventJourney } from "../../components";
 import InvertedPrimaryButton from "../../components/InvertedPrimaryButton/InvertedPrimaryButton";
 import IntermediateLoader from "../../components/IntermediateLoader/IntermediateLoader";
-import { iconMapping } from "../../utils/constants";
+import { creatorToPlatformMapping, iconMapping, invertMapping, platformToCreatorMapping } from "../../utils/constants";
 
 export default function UserJourneyPage() {
     const navigate = useNavigate();
     const { userId } = useParams();
     const [user, setUser] = useState(null);
+    const [allUserEvents, setAllUserEvents] = useState([]);
     const [userEvents, setUserEvents] = useState([]);
     // Populate these values from the Hasura API
     const [totalOrderValuePerUser, setTotalOrderValuePerUser] = useState(null);
@@ -21,8 +22,17 @@ export default function UserJourneyPage() {
     const [countOfFetchedRecords, setCountOfFetchedRecords] = useState(0);
     const [offset, setOffset] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
+
     useEffect(() => {
         getUserById({ userId }).then(setUser);
+        getUserEvents({ userId }).then((result) => {
+            if (!isEmpty(result)) {
+                setAllUserEvents(result);
+            }
+        });
+    }, [userId]);
+
+    useEffect(() => {
         getUserEvents({ userId, limit: 10, offset }).then((result) => {
             if (!isEmpty(result)) {
                 setUserEvents(result);
@@ -86,8 +96,23 @@ export default function UserJourneyPage() {
                 });
             }
         }
+        const creatorSplit = {
+            CREATOR_DHRUV: 0,
+            CREATOR_AAKASH: 0,
+            CREATOR_MIKE: 0
+        };
+        for (const mediumWeight of mediumWeights) {
+            const { title: platform, metric } = mediumWeight;
+            if (isNaN(metric) || isEmpty(metric)) {
+                continue;
+            }
+            const creatorsOfPlatform = platformToCreatorMapping[platform];
+            creatorsOfPlatform && creatorsOfPlatform.forEach((creatorOfPlatform) => {
+                creatorSplit[creatorOfPlatform] = (creatorSplit[creatorOfPlatform] + metric) / creatorsOfPlatform.length;
+            });
+        }
 
-        return mediumWeights;
+        return { platformSplit: mediumWeights, creatorSplit };
     }
 
     if (isLoading)
@@ -96,6 +121,8 @@ export default function UserJourneyPage() {
                 <IntermediateLoader/>
             </div>
         );
+
+    const {creatorSplit, platformSplit} = splitOrderValueByMedium(allUserEvents, totalOrderValuePerUser)
 
     return (
         <div className="div-user-journey-parent-container">
@@ -113,10 +140,11 @@ export default function UserJourneyPage() {
                         display: "flex",
                         gap: "24px",
                     }}>{`Hello, ${userId}`}</div>
-                    <AggregateMetrics user={user} userEvents={userEvents}/>
+                    <AggregateMetrics user={user} userEvents={allUserEvents}/>
                     <UserMetrics
                         user={user}
-                        platformSplit={splitOrderValueByMedium(userEvents, totalOrderValuePerUser)}
+                        platformSplit={platformSplit}
+                        creatorSplit={creatorSplit}
                         ordersPlaced={isEmpty(ordersPlaced) || ordersPlaced === 0 ? '-' : formatNumber(ordersPlaced)}
                         totalOrderValue={isEmpty(totalOrderValuePerUser) || totalOrderValuePerUser === 0 ? '-' : currencyFormatter.format(totalOrderValuePerUser)}
                     />

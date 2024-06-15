@@ -1,5 +1,10 @@
 import { getBasicAuthInstance, getShopifyAuthInstance } from "./axiosInstance";
-import { CREATOR_AAKASH, CREATOR_DHRUV, CREATOR_MIKE, CREATOR_SPLIT } from "../utils/constants";
+import {
+    CREATOR_SPLIT,
+    creatorToLinkIdMapping,
+    creatorToPlatformMapping,
+    creatorToPromocodeMapping
+} from "../utils/constants";
 import { isEmpty } from "../utils/util";
 
 const axios = require("axios");
@@ -90,7 +95,11 @@ export async function getUserById({ userId }) {
 export async function getUserEvents({ userId, limit, offset }) {
     const api = getBasicAuthInstance(process.env.REACT_APP_CLIENT_ID_PROD, process.env.REACT_APP_CLIENT_SECRET_PROD, "https://api.insightiq.ai");
     try {
-        const response = await api.get(`v1/measurement/attribution/events?user_id=${userId}&limit=${limit}&offset=${offset}`);
+        let url = `v1/measurement/attribution/events`;
+        !isEmpty(userId) && (url += `?user_id=${userId}`);
+        !isEmpty(limit) && (url += `&limit=${limit}`);
+        !isEmpty(offset) && (url += `&offset=${offset}`);
+        const response = await api.get(url);
         return response.data?.data;
     } catch (error) {
         console.log(error);
@@ -150,21 +159,6 @@ async function getTotalSalesForCreator(storeId, promocodes) {
         return 0;
     }
 }
-
-const creatorToLinkIdMapping = {};
-creatorToLinkIdMapping[CREATOR_DHRUV] = [process.env.REACT_APP_EXTERNAL_LINK_ID_1, process.env.REACT_APP_EXTERNAL_LINK_ID_2];
-creatorToLinkIdMapping[CREATOR_AAKASH] = [process.env.REACT_APP_EXTERNAL_LINK_ID_3];
-creatorToLinkIdMapping[CREATOR_MIKE] = [process.env.REACT_APP_EXTERNAL_LINK_ID_4];
-
-const creatorToPromocodeMapping = {};
-creatorToPromocodeMapping[CREATOR_DHRUV] = [process.env.REACT_APP_PROMOCODE_1, process.env.REACT_APP_PROMOCODE_2];
-creatorToPromocodeMapping[CREATOR_AAKASH] = [process.env.REACT_APP_PROMOCODE_3];
-creatorToPromocodeMapping[CREATOR_MIKE] = [process.env.REACT_APP_PROMOCODE_4];
-
-const creatorToPlatformMapping = {};
-creatorToPlatformMapping[CREATOR_DHRUV] = ["YouTube", "TikTok"];
-creatorToPlatformMapping[CREATOR_AAKASH] = ["Instagram"];
-creatorToPlatformMapping[CREATOR_MIKE] = ["Twitter"];
 
 export async function getCreatorsData({ storeId }) {
     const creatorDataPromises = CREATOR_SPLIT.map(async (creator, index) => {
