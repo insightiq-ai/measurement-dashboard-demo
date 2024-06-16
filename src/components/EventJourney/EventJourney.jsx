@@ -5,22 +5,35 @@ import { isEmpty, convertTimeToLocale } from "../../utils/util";
 
 const ListComponent = ({ userEvent }) => {
   // TODO: Add dynamic creator mapping from utm_source
+  const CREATOR_AAKASH = "Aakash Mehta";
+  const CREATOR_DHRUV = "Dhruv Kapuria";
+  const CREATOR_MIKE = "Mike Lee";
+
+  const platformToCreatorMapping = {};
+  platformToCreatorMapping["YouTube"] = { name: CREATOR_DHRUV, icon: <Icons.dhruv_demo /> };
+  platformToCreatorMapping["TikTok"] = { name: CREATOR_DHRUV, icon: <Icons.dhruv_demo /> };
+  platformToCreatorMapping["Instagram"] = { name: CREATOR_AAKASH, icon: <Icons.aakash_demo /> };
+  platformToCreatorMapping["Twitter"] = { name: CREATOR_MIKE, icon: <Icons.mike_demo /> };
+
   const isCreatorPresent = userEvent.utm_source ?? false;
+  const affiliateCreator = isCreatorPresent ? platformToCreatorMapping[userEvent.utm_medium].name : "Sam Kolder";
+  const affliateCreatorIcon = isCreatorPresent ? platformToCreatorMapping[userEvent.utm_medium].icon : <Icons.users_icon />;
   const storeLink = !isEmpty(userEvent.window_location) ? userEvent.window_location : "-";
   const deviceDetails = userEvent.device_details.device ?? "iPhone 15";
   const browser = userEvent.device_details.browser ?? "Chrome";
+
   const eventTimeStamp = !isEmpty(userEvent?.event_timestamp) ? convertTimeToLocale(userEvent?.event_timestamp) : "-";
   return (
     <div className="list-parent-container">
       {isCreatorPresent ? (
         <div className="affiliate-header">
-          <Icons.users_icon />
-          <span>Affiliated to Sam Kolder</span>
+          {affliateCreatorIcon}
+          <span>Affiliated to {affiliateCreator}</span>
         </div>
       ) : null}
       <div className="affiliate-info-parent-container">
         <div className="affiliate-info-container">
-          <div>
+          <div className="store-icon-container">
             <Icons.youtube_demo />
           </div>
           <div className="affiliate-store-details">
@@ -31,7 +44,9 @@ const ListComponent = ({ userEvent }) => {
                 gap: "12px",
               }}
             >
-              <a href="">{storeLink}</a>
+              <a href={storeLink} target="_blank" className="link-container">
+                {storeLink}
+              </a>
               <Icons.link_to_icon />
             </div>
             <div className="affiliate-device-details">
@@ -40,7 +55,7 @@ const ListComponent = ({ userEvent }) => {
                 <span>{deviceDetails}</span>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <Icons.chrome />
+                {browser === "Safari" ? <Icons.safari /> : <Icons.chrome />}
                 <span>{browser}</span>
               </div>
             </div>
