@@ -6,7 +6,6 @@ import SplitMetrics from "../SplitMetrics/SplitMetrics";
 import { CREATOR_SPLIT } from "../../../utils/constants";
 
 export default function UserMetrics({ creatorSplit, platformSplit, totalOrderValue, ordersPlaced }) {
-    console.log(creatorSplit);
     const splitMetricsForCreator = CREATOR_SPLIT.map((creator) => {
         return {
             icon: creator.icon,
