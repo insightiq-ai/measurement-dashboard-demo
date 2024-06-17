@@ -25,7 +25,7 @@ export default function UserJourneyPage() {
 
     useEffect(() => {
         getUserById({ userId }).then(setUser);
-        getUserEvents({ userId }).then((result) => {
+        getUserEvents({ userId, limit: 100 }).then((result) => {
             if (!isEmpty(result)) {
                 setAllUserEvents(result);
             }
