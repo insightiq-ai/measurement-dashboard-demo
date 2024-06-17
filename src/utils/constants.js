@@ -8,7 +8,11 @@ export const ALL_USERS = "All users";
 export const CREATORS = "Creators";
 
 export const TOTAL_CREATOR_COST = 2000;
-export const NUMBER_OF_CREATORS = 3;
+export const YouTube = "YouTube";
+export const TikTok = "TikTok";
+export const Instagram = "Instagram";
+export const Twitter = "Twitter";
+export const Facebook = "Facebook";
 
 export const CREATOR_AAKASH = "Aakash Mehta";
 export const CREATOR_DHRUV = "Dhruv Kapuria";
@@ -19,12 +23,6 @@ export const CREATOR_SPLIT = [
   { icon: <Icons.aakash_demo />, key: "CREATOR_AAKASH", title: CREATOR_AAKASH, metric: TOTAL_CREATOR_COST / 4 },
   { icon: <Icons.mike_demo />, key: "CREATOR_MIKE", title: CREATOR_MIKE, metric: TOTAL_CREATOR_COST / 4 },
 ];
-
-export const creatorToIconMapping = {
-  [CREATOR_DHRUV]: <Icons.dhruv_demo />,
-  [CREATOR_AAKASH]: <Icons.aakash_demo />,
-  [CREATOR_MIKE]: <Icons.mike_demo />,
-};
 
 export const iconMapping = {
   YouTube: <Icons.youtube_demo />,
@@ -50,28 +48,10 @@ creatorToPlatformMapping[CREATOR_AAKASH] = ["Instagram"];
 creatorToPlatformMapping[CREATOR_MIKE] = ["Twitter"];
 
 const platformToCreatorMapping = {};
-platformToCreatorMapping["YouTube"] = ["CREATOR_DHRUV"];
-platformToCreatorMapping["TikTok"] = ["CREATOR_DHRUV"];
-platformToCreatorMapping["Instagram"] = ["CREATOR_DHRUV", "CREATOR_AAKASH"];
-platformToCreatorMapping["Twitter"] = ["CREATOR_MIKE"];
-
-export function invertMapping(mapping) {
-  const platformToCreatorMapping = {};
-
-  // Iterate over each creator in the original mapping
-  for (const creator in mapping) {
-    const platforms = mapping[creator];
-
-    // Iterate over each platform associated with the creator
-    platforms.forEach((platform) => {
-      if (!platformToCreatorMapping[platform]) {
-        platformToCreatorMapping[platform] = []; // Initialize if not already done
-      }
-      platformToCreatorMapping[platform].push(creator);
-    });
-  }
-
-  return platformToCreatorMapping;
-}
+platformToCreatorMapping[YouTube] = ["CREATOR_DHRUV"];
+platformToCreatorMapping[TikTok] = ["CREATOR_DHRUV"];
+platformToCreatorMapping[Instagram] = ["CREATOR_DHRUV", "CREATOR_AAKASH"];
+platformToCreatorMapping[Twitter] = ["CREATOR_MIKE"];
+platformToCreatorMapping[Facebook] = ["CREATOR_MIKE"];
 
 export { creatorToLinkIdMapping, creatorToPromocodeMapping, creatorToPlatformMapping, platformToCreatorMapping };
