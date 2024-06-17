@@ -52,7 +52,7 @@ creatorToPlatformMapping[CREATOR_MIKE] = ["Twitter"];
 const platformToCreatorMapping = {};
 platformToCreatorMapping["YouTube"] = ["CREATOR_DHRUV"];
 platformToCreatorMapping["TikTok"] = ["CREATOR_DHRUV"];
-platformToCreatorMapping["Instagram"] = ["CREATOR_AAKASH"];
+platformToCreatorMapping["Instagram"] = ["CREATOR_DHRUV", "CREATOR_AAKASH"];
 platformToCreatorMapping["Twitter"] = ["CREATOR_MIKE"];
 
 export function invertMapping(mapping) {
