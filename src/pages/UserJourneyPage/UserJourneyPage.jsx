@@ -115,7 +115,7 @@ export default function UserJourneyPage() {
             const creatorsOfPlatform = platformToCreatorMapping[platform];
             creatorsOfPlatform &&
             creatorsOfPlatform.forEach((creatorOfPlatform) => {
-                creatorSplit[creatorOfPlatform] = (creatorSplit[creatorOfPlatform] + metric) / creatorsOfPlatform.length;
+                creatorSplit[creatorOfPlatform] += metric / creatorsOfPlatform.length;
             });
         }
 
