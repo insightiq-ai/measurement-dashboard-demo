@@ -146,7 +146,7 @@ async function getUtmClicksForCreator(linkIds) {
 }
 
 async function getTotalSalesForCreator(storeId, promocodes) {
-    const linkPromises = promocodes.map(linkId => getPromocodeAnalytics({ storeId, linkId }));
+    const linkPromises = promocodes.map(discountId => getPromocodeAnalytics({ storeId, discountId }));
 
     try {
         const analyticsResults = await Promise.all(linkPromises);
