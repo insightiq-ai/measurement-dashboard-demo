@@ -58,11 +58,16 @@ export default function FilterMenu({
                     keepMounted
                     anchorOrigin={{
                         vertical: 'bottom',
-                        horizontal: 'center',
+                        horizontal: 'left',
                     }}
                     transformOrigin={{
                         vertical: 'top',
-                        horizontal: 'center',
+                        horizontal: 'left',
+                    }}
+                    PaperProps={{
+                        style: {
+                            width: anchorEl ? anchorEl.clientWidth : 'auto', // Set the width of the Menu
+                        },
                     }}
                 >
                     {menuItems.map((item, index) => (
