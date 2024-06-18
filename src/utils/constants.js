@@ -41,9 +41,9 @@ creatorToPromocodeMapping[CREATOR_AAKASH] = [process.env.REACT_APP_PROMOCODE_3];
 creatorToPromocodeMapping[CREATOR_MIKE] = [process.env.REACT_APP_PROMOCODE_4];
 
 const creatorToPlatformMapping = {};
-creatorToPlatformMapping[CREATOR_DHRUV] = ["YouTube", "TikTok"];
-creatorToPlatformMapping[CREATOR_AAKASH] = ["Instagram"];
-creatorToPlatformMapping[CREATOR_MIKE] = ["Twitter"];
+creatorToPlatformMapping[CREATOR_DHRUV] = [YouTube, TikTok];
+creatorToPlatformMapping[CREATOR_AAKASH] = [Instagram];
+creatorToPlatformMapping[CREATOR_MIKE] = [Twitter];
 
 const platformToCreatorMapping = {};
 platformToCreatorMapping[YouTube] = ["CREATOR_DHRUV"];

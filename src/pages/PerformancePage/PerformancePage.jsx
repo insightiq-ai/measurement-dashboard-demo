@@ -306,7 +306,7 @@ export default function PerformancePage(props) {
     function renderTotalSalesCell(params) {
         let total_sales = '-';
         if (!isEmpty(params.row.total_sales) && params.row.total_sales !== 0) {
-            total_sales = formatNumber(params.row.total_sales);
+            total_sales = currencyFormatter.format(params.row.total_sales);
         }
         return <span className={'body-r'}>{total_sales}</span>;
     }
@@ -314,7 +314,7 @@ export default function PerformancePage(props) {
     function renderRoiCell(params) {
         let roi = '-';
         if (!isEmpty(params.row.roi) && params.row.roi !== 0) {
-            roi = `${formatNumber(params.row.roi)}%`;
+            roi = percentFormatter.format(params.row.roi);
         }
         return <span className={'body-b color-semantics-primary-success'}>{roi}</span>;
     }
@@ -342,7 +342,7 @@ export default function PerformancePage(props) {
             headerName: "Creator name",
             renderCell: renderNameCell,
             sortable: false,
-            flex: 0.7
+            flex: 0.8
         },
         {
             ...commonHeaderProps,
@@ -353,7 +353,7 @@ export default function PerformancePage(props) {
             renderCell: renderUtmClicksCell,
             headerClassName: `${commonHeaderProps.headerClassName} ${getSortedHeaderClass(sortModel, "utm_clicks")}`,
             sortable: true,
-            flex: 0.4
+            flex: 0.5
         },
         {
             ...commonHeaderProps,
@@ -364,7 +364,7 @@ export default function PerformancePage(props) {
             renderCell: renderCreatorCostCell,
             headerClassName: `${commonHeaderProps.headerClassName} ${getSortedHeaderClass(sortModel, "creator_cost")}`,
             sortable: true,
-            flex: 0.4
+            flex: 0.7
         },
         {
             ...commonHeaderProps,
@@ -375,7 +375,7 @@ export default function PerformancePage(props) {
             renderCell: renderTotalSalesCell,
             headerClassName: `${commonHeaderProps.headerClassName} ${getSortedHeaderClass(sortModel, "total_sales")}`,
             sortable: true,
-            flex: 0.4
+            flex: 0.6
         },
         {
             ...commonHeaderProps,
