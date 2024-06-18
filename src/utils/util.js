@@ -71,9 +71,5 @@ export const convertTimeToLocale = (time, dateTimeFormat = DATE_TIME_FORMAT) => 
     if (!time || typeof time !== "string") {
         return time;
     }
-    let updatedTime = time;
-    if (time?.slice(-6) !== "+00:00") {
-        updatedTime = `${time}+00:00`;
-    }
-    return moment(updatedTime).format(dateTimeFormat);
+    return moment.tz(time, "UTC").tz("Europe/London").format(dateTimeFormat);
 };
