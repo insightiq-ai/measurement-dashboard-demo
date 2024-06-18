@@ -55,7 +55,6 @@ export default function UserJourneyPage() {
             TikTok: 0,
             Instagram: 0,
             Twitter: 0,
-            Facebook: 0,
         };
 
         data.forEach((item) => {
@@ -66,14 +65,11 @@ export default function UserJourneyPage() {
                 normalizedMedium === "youtube" ||
                 normalizedMedium === "tiktok" ||
                 normalizedMedium === "instagram" ||
-                normalizedMedium === "twitter" ||
-                normalizedMedium === "facebook"
+                normalizedMedium === "twitter"
             ) {
                 mediumCounts[medium]++;
             } else if (normalizedMedium === "x") {
                 mediumCounts["Twitter"]++; // Assuming 'X' counts as 'Twitter' based on previous context
-            } else if (normalizedMedium === "meta") {
-                mediumCounts["Facebook"]++; // Assuming 'X' counts as 'Twitter' based on previous context
             }
         });
 
