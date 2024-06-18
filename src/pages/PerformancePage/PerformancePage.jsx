@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./PerformancePage.scss";
 import SummaryMetrics from "../../components/SummaryComponents/SummaryMetrics/SummaryMetrics";
-import { Icons, TabSwitch, TextBox } from "../../components";
+import { FilterMenu, Icons, TabSwitch, TextBox } from "../../components";
 import { ALL_USERS, CREATORS, iconMapping, SUMMARY, UTM_LINKS } from "../../utils/constants";
 import TabPanel from "../../components/TabSwitch/TabPanel";
 import {
@@ -78,7 +78,6 @@ export default function PerformancePage(props) {
         totalOrderCount + totalAbondonedCheckouts : null;
     const checkoutsInitiated = totalOrderCount;
 
-    const ROW_HEIGHT = 100;
     const PAGE_SIZE = 10;
     const [isUserGridLoading, setUserGridLoading] = useState(false);
     const [isCreatorGridLoading, setCreatorGridLoading] = useState(false);
@@ -213,10 +212,6 @@ export default function PerformancePage(props) {
             updated_at = convertTimeToLocale(params.row.updated_at);
         }
         return <span className={'body-r'}>{updated_at}</span>;
-        // let date = params.row["event_timestamp"];
-        // if (date === undefined) {
-        //     date = params.row["updated_at"];
-        // }
     }
 
     const userColumns = [
@@ -402,6 +397,20 @@ export default function PerformancePage(props) {
     ];
     const allowedSorts = ["desc", "asc"];
 
+    const postTypeMenu = {
+        firstName: "Post types",
+        selectedValueText: 'Linear',
+        options: [
+            {
+                text: 'Linear',
+                checked: true,
+                isVisible: true,
+                onClick: () => {
+                },
+            }
+        ],
+    };
+
     return (
         <div className={"div-performance-page"}>
             <div className={"section-metrics"}>
@@ -537,10 +546,11 @@ export default function PerformancePage(props) {
                 <TabPanel index={ALL_USERS} value={tableViewCurrTab} sx={{ margin: "0px", padding: "0px" }}>
                     <div className={'div-all-users-search-container'}>
                         <TextBox variant={'default-with-search-icon'}
-                                 placeholder={'Search User ID'}
+                                 placeholder={'Search user ID'}
                                  onEnter={setSearchUserIdText}
                                  value={searchUserIdText}
                                  onClear={() => setSearchUserIdText("")}/>
+
                     </div>
                     <Grid
                         gridProps={{
@@ -559,46 +569,66 @@ export default function PerformancePage(props) {
                     />
                 </TabPanel>
                 <TabPanel index={CREATORS} value={tableViewCurrTab} sx={{ margin: "0px", padding: "0px" }}>
-                    <div className={"grid-container"} style={{ height: 430 }}>
-                        <DataGrid
-                            loading={isCreatorGridLoading}
-                            columns={creatorColumns}
-                            rows={creatorRows}
-                            getRowHeight={() => 92}
-                            pageSize={PAGE_SIZE}
-                            page={0}
-                            onPageChange={() => {
-                            }}
-                            rowCount={totalCreatorRows}
-                            className={"mui-data-grid"}
-                            components={{
-                                Footer: (props) => <CustomFooter totalRows={totalCreatorRows} pageSize={PAGE_SIZE}
-                                                                 handlePageChange={() => {
-                                                                 }} pageNumber={0}/>,
-                            }}
-                            disableColumnMenu
-                            disableSelectionOnClick
-                            getRowId={(row) => row.id}
-                            initialState={{
-                                sorting: { sortModel },
-                            }}
-                            // pagination
-                            sortingMode={"client"}
-                            sortingOrder={allowedSorts}
-                            onSortModelChange={setSortModel}
-                            sx={{
-                                "& .hideRightSeparator > .MuiDataGrid-columnSeparator": {
-                                    display: "none",
-                                },
-                            }}
-                            localeText={{
-                                noRowsLabel: (
-                                    <span className={"body-m"} style={{ color: Colors.neutralsSecondaryGrey }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 32, }}>
+                        <div style={{ display: 'flex', gap: 32 }}>
+                            <TextBox variant={'default-with-search-icon'}
+                                     placeholder={'Search creator '}
+                                     onEnter={() => {
+                                     }}
+                                     value={''}
+                                     onClear={() => {
+                                     }}/>
+                            <FilterMenu
+                                menuItems={postTypeMenu.options}
+                                firstItem={'Attribution model'}
+                                rowRenderer={(index) => {
+                                    return postTypeMenu.options[index].text;
+                                }}
+                                selectedValueText={'Linear'}
+
+                            />
+                        </div>
+                        <div className={"grid-container"} style={{ height: 430 }}>
+                            <DataGrid
+                                loading={isCreatorGridLoading}
+                                columns={creatorColumns}
+                                rows={creatorRows}
+                                getRowHeight={() => 92}
+                                pageSize={PAGE_SIZE}
+                                page={0}
+                                onPageChange={() => {
+                                }}
+                                rowCount={totalCreatorRows}
+                                className={"mui-data-grid"}
+                                components={{
+                                    Footer: (props) => <CustomFooter totalRows={totalCreatorRows} pageSize={PAGE_SIZE}
+                                                                     handlePageChange={() => {
+                                                                     }} pageNumber={0}/>,
+                                }}
+                                disableColumnMenu
+                                disableSelectionOnClick
+                                getRowId={(row) => row.id}
+                                initialState={{
+                                    sorting: { sortModel },
+                                }}
+                                // pagination
+                                sortingMode={"client"}
+                                sortingOrder={allowedSorts}
+                                onSortModelChange={setSortModel}
+                                sx={{
+                                    "& .hideRightSeparator > .MuiDataGrid-columnSeparator": {
+                                        display: "none",
+                                    },
+                                }}
+                                localeText={{
+                                    noRowsLabel: (
+                                        <span className={"body-m"} style={{ color: Colors.neutralsSecondaryGrey }}>
                     {"No creators found"}
                   </span>
-                                ),
-                            }}
-                        />
+                                    ),
+                                }}
+                            />
+                        </div>
                     </div>
                 </TabPanel>
             </div>
