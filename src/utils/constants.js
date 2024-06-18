@@ -12,7 +12,6 @@ export const YouTube = "YouTube";
 export const TikTok = "TikTok";
 export const Instagram = "Instagram";
 export const Twitter = "Twitter";
-export const Facebook = "Facebook";
 
 export const CREATOR_AAKASH = "Aakash Mehta";
 export const CREATOR_DHRUV = "Dhruv Kapuria";
@@ -29,7 +28,6 @@ export const iconMapping = {
   TikTok: <Icons.tiktok_demo />,
   Instagram: <Icons.instagram_demo />,
   Twitter: <Icons.twitter_demo />,
-  Facebook: <Icons.facebook_demo />,
 };
 
 const creatorToLinkIdMapping = {};
@@ -52,6 +50,5 @@ platformToCreatorMapping[YouTube] = ["CREATOR_DHRUV"];
 platformToCreatorMapping[TikTok] = ["CREATOR_DHRUV"];
 platformToCreatorMapping[Instagram] = ["CREATOR_AAKASH"];
 platformToCreatorMapping[Twitter] = ["CREATOR_MIKE"];
-platformToCreatorMapping[Facebook] = ["CREATOR_MIKE"];
 
 export { creatorToLinkIdMapping, creatorToPromocodeMapping, creatorToPlatformMapping, platformToCreatorMapping };

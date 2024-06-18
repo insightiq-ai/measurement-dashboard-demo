@@ -5,7 +5,7 @@ import AggregateMetrics from "../../components/UserJourneyComponents/AggregateMe
 import { getTotalOrderPerAUID, getUserById, getUserEvents } from "../../api/api";
 import { currencyFormatter, formatNumber, isEmpty } from "../../utils/util";
 import UserMetrics from "../../components/UserJourneyComponents/UserMetrics/UserMetrics";
-import { EventJourney } from "../../components";
+import { EventJourney, Icons } from "../../components";
 import InvertedPrimaryButton from "../../components/InvertedPrimaryButton/InvertedPrimaryButton";
 import IntermediateLoader from "../../components/IntermediateLoader/IntermediateLoader";
 import { iconMapping, platformToCreatorMapping } from "../../utils/constants";
@@ -55,7 +55,6 @@ export default function UserJourneyPage() {
             TikTok: 0,
             Instagram: 0,
             Twitter: 0,
-            Facebook: 0,
         };
 
         data.forEach((item) => {
@@ -66,14 +65,11 @@ export default function UserJourneyPage() {
                 normalizedMedium === "youtube" ||
                 normalizedMedium === "tiktok" ||
                 normalizedMedium === "instagram" ||
-                normalizedMedium === "twitter" ||
-                normalizedMedium === "facebook"
+                normalizedMedium === "twitter"
             ) {
                 mediumCounts[medium]++;
             } else if (normalizedMedium === "x") {
                 mediumCounts["Twitter"]++; // Assuming 'X' counts as 'Twitter' based on previous context
-            } else if (normalizedMedium === "meta") {
-                mediumCounts["Facebook"]++; // Assuming 'X' counts as 'Twitter' based on previous context
             }
         });
 
@@ -148,8 +144,9 @@ export default function UserJourneyPage() {
                         style={{
                             display: "flex",
                             gap: "24px",
+                            alignItems: "center",
                         }}
-                    >{`Hello, ${userId}`}</div>
+                    ><Icons.avatar1_demo/>{`Hello, ${userId}`}</div>
                     <AggregateMetrics user={user} userEvents={allUserEvents}/>
                     <UserMetrics
                         user={user}

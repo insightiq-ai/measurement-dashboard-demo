@@ -19,7 +19,7 @@ export default function UserMetrics({ creatorSplit, platformSplit, totalOrderVal
                 <div className="div-user-metric-item item-1">
                     <LeftMainMetric mainMetricTitle={'Total order value'}
                                     mainMetricValue={totalOrderValue}
-                                    tooltip={'Tooltip'}/>
+                                    tooltip={'Total value of the products purchased by the user'}/>
                     <PerformanceMetric
                         key={0}
                         variant={'infoMetricIcon'}
