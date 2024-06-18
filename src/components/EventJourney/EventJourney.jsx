@@ -1,6 +1,7 @@
 import { Icons } from "../../components";
 import "./EventJourney.scss";
 import { convertTimeToLocale, isEmpty } from "../../utils/util";
+import demoshoes from '../../res/demoshoes.png';
 
 const ListComponent = ({ userEvent }) => {
     // TODO: Add dynamic creator mapping from utm_source
@@ -49,7 +50,8 @@ const ListComponent = ({ userEvent }) => {
                 <div className="affiliate-info-parent-container">
                     <div className="affiliate-info-container">
                         <div className="store-icon-container">
-                            <Icons.youtube_demo/>
+                            <img width={48} height={48} src={demoshoes} alt="Logo"/>
+
                         </div>
                         <div className="affiliate-store-details">
                             <div
