@@ -72,7 +72,7 @@ export async function getUsers({ limit, offset }) {
 
     const api = getBasicAuthInstance(process.env.REACT_APP_CLIENT_ID_PROD, process.env.REACT_APP_CLIENT_SECRET_PROD, "https://api.insightiq.ai");
     try {
-        const response = await api.get(`v1/measurement/users?list_anonymous_users=true&list_users_with_no_events=true&limit=${limit}&offset=${offset}`);
+        const response = await api.get(`v1/measurement/users?list_only_anonymous_users=true&list_users_with_no_events=true&limit=${limit}&offset=${offset}`);
         const users = response.data;
 
         return users.data;
