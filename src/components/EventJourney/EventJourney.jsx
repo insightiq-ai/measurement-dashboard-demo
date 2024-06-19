@@ -39,7 +39,7 @@ function ListComponent({ userEvent, isLastItem }) {
                 <div>
                     <span className="no-wrap-link">
                         {'Custom promocode was applied to an order on store'}
-                                            <a href={storeLink} target="_blank" className="link-container">
+                                            <a href={'https://www.demoshoes.shop/'} target="_blank" className="link-container">
                             {'Demo Shoes'}
                         </a>
                         <Icons.link_to_icon/>
