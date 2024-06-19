@@ -9,7 +9,6 @@ import {
     getAttributionStatistics,
     getCountOfAbondonedCheckout,
     getCreatorsData,
-    getDashboardLinkMetrics,
     getPromocodeAnalytics,
     getUserById,
     getUsers,
@@ -25,10 +24,11 @@ import { useNavigate } from "react-router-dom";
 export default function PerformancePage(props) {
     const [analytics, setAnalytics] = useState(null);
     const [attributionStatistics, setAttributionStatistics] = useState(null);
-    const [dashboardLinkMetrics, setDashboardLinkMetrics] = useState(null);
     const [totalOrderCount, setTotalOrderCount] = useState(null);
     const [totalAbondonedCheckouts, setTotalAbondonedCheckouts] = useState(null);
     const navigate = useNavigate();
+    const [totalCreatorRows, setTotalCreatorRows] = useState(0);
+    const [creatorRows, setCreatorRows] = useState([]);
 
     const TOTAL_CREATOR_COST = 2000;
     const NUMBER_OF_CREATORS = 3;
@@ -66,7 +66,7 @@ export default function PerformancePage(props) {
     const averageSalesPerUser = (!isEmpty(totalSales) && !isEmpty(totalUsers) && totalUsers !== 0) ? totalSales / totalUsers : null;
 
     // Calculations - UTM Links
-    const totalLinkClicks = !isEmpty(dashboardLinkMetrics) ? dashboardLinkMetrics.total_clicks : null;
+    const totalLinkClicks = !isEmpty(creatorRows) ? creatorRows.reduce((acc, creator) => acc + Number(creator?.utm_clicks), 0) : null;
     const landingPageViews = !isEmpty(attributionStatistics) ? attributionStatistics.number_of_sessions : null;
     const clickThroughRate = (!isEmpty(landingPageViews) &&
         !isEmpty(totalLinkClicks) &&
@@ -84,8 +84,7 @@ export default function PerformancePage(props) {
     const [pageNumber, setPageNumber] = useState(0);
     const [totalUserRows, setTotalUserRows] = useState(0);
     const [userRows, setUserRows] = useState([]);
-    const [totalCreatorRows, setTotalCreatorRows] = useState(0);
-    const [creatorRows, setCreatorRows] = useState([]);
+
     const defaultSortModel = [{ field: "roi", sort: "desc" }];
     const [sortModel, setSortModel] = useState(defaultSortModel);
     const [searchUserIdText, setSearchUserIdText] = useState(null);
@@ -94,7 +93,6 @@ export default function PerformancePage(props) {
         const storeId = process.env.REACT_APP_STORE_ID;
         getPromocodeAnalytics({ storeId }).then(setAnalytics);
         getAttributionStatistics().then(setAttributionStatistics);
-        getDashboardLinkMetrics().then(setDashboardLinkMetrics);
         setCreatorGridLoading(true);
         getCreatorsData({ storeId }).then((res) => {
             if (!isEmpty(res)) {

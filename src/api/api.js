@@ -32,17 +32,6 @@ export async function getAttributionStatistics() {
     }
 }
 
-export async function getDashboardLinkMetrics() {
-    const api = getBasicAuthInstance(process.env.REACT_APP_CLIENT_ID_PROD, process.env.REACT_APP_CLIENT_SECRET_PROD, "https://api.insightiq.ai");
-
-    try {
-        const response = await api.get(`v1/measurement/dashboard/links/metrics`);
-        return response.data;
-    } catch (error) {
-        console.log(error);
-    }
-}
-
 export async function getUsers({ limit, offset }) {
 
     async function addEventTimestamp(users) {
