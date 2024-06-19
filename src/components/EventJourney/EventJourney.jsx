@@ -3,16 +3,16 @@ import "./EventJourney.scss";
 import { convertTimeToLocale, isEmpty } from "../../utils/util";
 import demoshoes from '../../res/demoshoes.png';
 
-const ListComponent = ({ userEvent, isLastItem }) => {
+function ListComponent({ userEvent, isLastItem }) {
     // TODO: Add dynamic creator mapping from utm_source
     const CREATOR_AAKASH = "Aakash Mehta";
     const CREATOR_DHRUV = "Dhruv Kapuria";
     const CREATOR_MIKE = "Mike Lee";
 
     const platformToCreatorMapping = {};
-    platformToCreatorMapping["YouTube"] = { name: CREATOR_DHRUV, icon: <Icons.dhruv_demo/> };
-    platformToCreatorMapping["TikTok"] = { name: CREATOR_DHRUV, icon: <Icons.dhruv_demo/> };
-    platformToCreatorMapping["Instagram"] = { name: CREATOR_AAKASH, icon: <Icons.aakash_demo/> };
+    platformToCreatorMapping["YouTube"] = { name: CREATOR_AAKASH, icon: <Icons.aakash_demo/> };
+    platformToCreatorMapping["TikTok"] = { name: CREATOR_AAKASH, icon: <Icons.aakash_demo/> };
+    platformToCreatorMapping["Instagram"] = { name: CREATOR_DHRUV, icon: <Icons.dhruv_demo/> };
     platformToCreatorMapping["Twitter"] = { name: CREATOR_MIKE, icon: <Icons.mike_demo/> };
 
     const isCreatorPresent = userEvent.utm_source ?? false;
@@ -83,7 +83,7 @@ const ListComponent = ({ userEvent, isLastItem }) => {
             {!isLastItem && <div className="line-break"/>}
         </div>
     );
-};
+}
 
 export default function EventJourney({ userEvents }) {
     return (

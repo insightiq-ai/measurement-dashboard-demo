@@ -68,9 +68,9 @@ export default function PerformancePage(props) {
     // Calculations - UTM Links
     const totalLinkClicks = !isEmpty(dashboardLinkMetrics) ? dashboardLinkMetrics.total_clicks : null;
     const landingPageViews = !isEmpty(attributionStatistics) ? attributionStatistics.number_of_sessions : null;
-    const clickThroughRate = (!isEmpty(totalLinkClicks) &&
-        !isEmpty(landingPageViews) &&
-        landingPageViews !== 0) ? totalLinkClicks / landingPageViews : null;
+    const clickThroughRate = (!isEmpty(landingPageViews) &&
+        !isEmpty(totalLinkClicks) &&
+        totalLinkClicks !== 0) ? (landingPageViews / totalLinkClicks) : null;
     const costPerLpv = (!isEmpty(totalCreatorCost) &&
         !isEmpty(landingPageViews) &&
         landingPageViews !== 0) ? (totalCreatorCost / landingPageViews) : null;

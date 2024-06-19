@@ -164,15 +164,15 @@ export async function getCreatorsData({ storeId }) {
     const creatorDataPromises = CREATOR_SPLIT.map(async (creator, index) => {
         const utm_clicks = await getUtmClicksForCreator(creatorToLinkIdMapping[creator.title]);
         const total_sales = await getTotalSalesForCreator(storeId, creatorToPromocodeMapping[creator.title]);
-        const { icon, title, metric } = creator;
+        const { icon, title, cost } = creator;
         return {
             id: index,
             icon,
             title,
             utm_clicks: utm_clicks,
-            creator_cost: metric,
+            creator_cost: cost,
             total_sales: total_sales,
-            roi: metric !== 0 ? (total_sales / metric) : 0,
+            roi: (cost !== 0) ? (total_sales / cost) : 0,
             platforms: creatorToPlatformMapping[title],
         };
     });
