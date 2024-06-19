@@ -1,7 +1,6 @@
 import { Icons } from "../../components";
 import "./EventJourney.scss";
 import { convertTimeToLocale, isEmpty } from "../../utils/util";
-import demoshoes from '../../res/demoshoes.png';
 
 function ListComponent({ userEvent, isLastItem }) {
     // TODO: Add dynamic creator mapping from utm_source
@@ -50,7 +49,7 @@ function ListComponent({ userEvent, isLastItem }) {
                 <div className="affiliate-info-parent-container">
                     <div className="affiliate-info-container">
                         <div className="store-icon-container">
-                            <img width={48} height={48} src={demoshoes} alt="Logo"/>
+                            <Icons.demoshoes />
 
                         </div>
                         <div className="affiliate-store-details">
