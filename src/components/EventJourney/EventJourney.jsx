@@ -3,7 +3,7 @@ import "./EventJourney.scss";
 import { convertTimeToLocale, isEmpty } from "../../utils/util";
 import demoshoes from '../../res/demoshoes.png';
 
-const ListComponent = ({ userEvent }) => {
+const ListComponent = ({ userEvent, isLastItem }) => {
     // TODO: Add dynamic creator mapping from utm_source
     const CREATOR_AAKASH = "Aakash Mehta";
     const CREATOR_DHRUV = "Dhruv Kapuria";
@@ -80,7 +80,7 @@ const ListComponent = ({ userEvent }) => {
                     </div>
                     <span>{eventTimeStamp}</span>
                 </div>}
-            <div className="line-break"/>
+            {!isLastItem && <div className="line-break"/>}
         </div>
     );
 };
@@ -88,11 +88,7 @@ const ListComponent = ({ userEvent }) => {
 export default function EventJourney({ userEvents }) {
     return (
         <div className="event-journey-list-container">
-            {userEvents && userEvents.map((userEvent, index) => {
-
-                return <ListComponent
-                    userEvent={userEvent}/>
-            })}
+            {userEvents && userEvents.map((userEvent, index) => <ListComponent userEvent={userEvent} isLastItem={index === userEvents.length - 1}/>)}
         </div>
     );
 }
