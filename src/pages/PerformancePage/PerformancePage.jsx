@@ -124,13 +124,20 @@ export default function PerformancePage(props) {
 
     function fetchTotalUsersCount() {
         if (!isEmpty(attributionStatistics)) {
+            setUserGridLoading(true);
             getUsers({
+                limit: 100,
+                offset: 0,
                 list_only_anonymous_users: false,
             }).then(rows => {
-                setTotalUserRows(attributionStatistics.number_of_users - rows.length);
+                const totalPageCount = (attributionStatistics.number_of_users - rows.length) < 0 ?
+                    attributionStatistics.number_of_users :
+                    attributionStatistics.number_of_users - rows.length;
+                setTotalUserRows(totalPageCount);
+            }).finally(() => {
+                setUserGridLoading(false);
             });
         }
-
     }
 
     useEffect(() => {
