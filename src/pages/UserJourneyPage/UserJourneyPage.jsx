@@ -77,42 +77,41 @@ export default function UserJourneyPage() {
     const totalCounts = Object.values(mediumCounts).reduce((sum, count) => sum + count, 0);
     const mediumWeights = [];
 
-    for (const medium in mediumCounts) {
-      if (totalCounts === 0) {
-        mediumWeights.push({
-          icon: iconMapping[medium], // Map the medium to its corresponding icon
-          title: medium,
-          metric: "-",
-        });
-      } else {
-        // Calculate the proportion of each medium
-        const value = (mediumCounts[medium] / totalCounts) * totalOrderValue;
-        mediumWeights.push({
-          icon: iconMapping[medium], // Map the medium to its corresponding icon
-          title: medium,
-          metric: value || "-",
-        });
-      }
+        for (const medium in mediumCounts) {
+            if (totalCounts === 0) {
+                mediumWeights.push({
+                    icon: iconMapping[medium], // Map the medium to its corresponding icon
+                    title: medium,
+                    metric: "-",
+                });
+            } else {
+                // Calculate the proportion of each medium
+                const value = (mediumCounts[medium] / totalCounts) * totalOrderValue;
+                mediumWeights.push({
+                    icon: iconMapping[medium], // Map the medium to its corresponding icon
+                    title: medium,
+                    metric: value || "-",
+                });
+            }
+        }
+        const creatorSplit = {
+            CREATOR_DHRUV: 0,
+            CREATOR_AAKASH: 0,
+            CREATOR_MIKE: 0,
+        };
+        for (const mediumWeight of mediumWeights) {
+            const { title: platform, metric } = mediumWeight;
+            if (isNaN(metric) || isEmpty(metric)) {
+                continue;
+            }
+            const creatorsOfPlatform = platformToCreatorMapping[platform];
+            creatorsOfPlatform &&
+            creatorsOfPlatform.forEach((creatorOfPlatform) => {
+                creatorSplit[creatorOfPlatform] += metric / creatorsOfPlatform.length;
+            });
+        }
+        return { platformSplit: mediumWeights, creatorSplit };
     }
-    const creatorSplit = {
-      CREATOR_DHRUV: 0,
-      CREATOR_AAKASH: 0,
-      CREATOR_MIKE: 0,
-    };
-    for (const mediumWeight of mediumWeights) {
-      const { title: platform, metric } = mediumWeight;
-      if (isNaN(metric) || isEmpty(metric)) {
-        continue;
-      }
-      const creatorsOfPlatform = platformToCreatorMapping[platform];
-      creatorsOfPlatform &&
-        creatorsOfPlatform.forEach((creatorOfPlatform) => {
-          creatorSplit[creatorOfPlatform] += metric / creatorsOfPlatform.length;
-        });
-    }
-
-    return { platformSplit: mediumWeights, creatorSplit };
-  }
 
   if (isLoading)
     return (

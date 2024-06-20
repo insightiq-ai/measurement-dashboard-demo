@@ -20,6 +20,8 @@ import { CustomFooter, getSortedHeaderClass } from "../../utils/DataGridUtils";
 import { DataGrid } from "@mui/x-data-grid";
 import { Colors } from "../../styles/colors";
 import { useNavigate } from "react-router-dom";
+import { debounce } from "lodash";
+import axios from "axios";
 
 export default function PerformancePage(props) {
     const [analytics, setAnalytics] = useState(null);
@@ -116,20 +118,25 @@ export default function PerformancePage(props) {
             limit: PAGE_SIZE,
             offset: pageNumber * PAGE_SIZE,
         })
-            .then(setUserRows)
+            .then((users) => {
+                setUserRows(users);
+            })
             .finally(() => {
                 setUserGridLoading(false);
             });
     }
 
-    useEffect(fetchUsers, [sortModel, pageNumber]);
-
     useEffect(() => {
         if (isEmpty(searchUserIdText)) {
             fetchUsers();
+            if (!isEmpty(attributionStatistics)) {
+                setTotalUserRows(attributionStatistics.number_of_users);
+            }
         } else {
             setUserGridLoading(true);
-            getUserById({ userId: searchUserIdText }).then((res) => {
+            getUserById({
+                userId: searchUserIdText
+            }).then((res) => {
                 if (isEmpty(res)) {
                     setUserRows([]);
                     setTotalUserRows(0);
@@ -138,17 +145,66 @@ export default function PerformancePage(props) {
                     setTotalUserRows(1);
                 }
             }).catch((error) => {
-                setUserRows([]);
-                setTotalUserRows(0);
+                console.error("Error fetching user data", error);
+                fetchUsers();
+                if (!isEmpty(attributionStatistics)) {
+                    setTotalUserRows(attributionStatistics.number_of_users);
+                }
             }).finally(() => setUserGridLoading(false));
         }
-    }, [searchUserIdText]);
+    }, [pageNumber, searchUserIdText]);
 
     useEffect(() => {
         if (!isEmpty(attributionStatistics)) {
             setTotalUserRows(attributionStatistics.number_of_users);
         }
     }, [attributionStatistics]);
+
+    // const delay = 500;
+    // const [cancelToken, setCancelToken] = useState(null);
+    //
+    // const handleSearch = debounce((searchQuery) => {
+    //     setSearchQuery(searchQuery);
+    //     // Cancel the previous API call, if any
+    //     if (cancelToken) {
+    //         cancelToken.cancel("Canceled due to new search query");
+    //     }
+    //
+    //     // Create a new cancel token for the current API call
+    //     const newCancelToken = axios.CancelToken.source();
+    //     setCancelToken(newCancelToken);
+    //
+    //     // Make API call to search for repositories on GitHub
+    //     if (searchQuery.trim() !== "") {
+    //         // Only make API call if searchQuery is not empty
+    //         setLoading(true);
+    //         handlePostSearch({ searchQuery, newCancelToken })
+    //             .then((response) => {
+    //                 setSearchResults(response);
+    //                 setLoading(false);
+    //                 if (filterKey === CREATOR_LOOKALIKES || filterKey === AUDIENCE_LOOKALIKES || filterKey === CREATOR_LOCATIONS || filterKey === AUDIENCE_LOCATIONS) {
+    //                     trackEvent(FILTER_SEARCHED, {
+    //                         query: searchQuery,
+    //                         source: FILTER_KEY_MAPPING[filterKey],
+    //                         result_count: response.length,
+    //                     });
+    //                 }
+    //             })
+    //             .catch((error) => {
+    //                 if (axios.isCancel(error)) {
+    //                     console.log("Canceled due to new search query");
+    //                 } else {
+    //                     setError(error);
+    //                     setLoading(false);
+    //                 }
+    //             });
+    //     } else {
+    //         // If searchQuery is empty, clear the search results
+    //         setSearchResults([]);
+    //         setLoading(false);
+    //         setError(null);
+    //     }
+    // }, delay);
 
     const commonHeaderProps = {
         flex: 1,
@@ -543,11 +599,13 @@ export default function PerformancePage(props) {
                 </div>
                 <TabPanel index={ALL_USERS} value={tableViewCurrTab} sx={{ margin: "0px", padding: "0px" }}>
                     <div className={'div-all-users-search-container'}>
-                        <TextBox variant={'default-with-search-icon'}
-                                 placeholder={'Search user ID'}
-                                 onEnter={setSearchUserIdText}
-                                 value={searchUserIdText}
-                                 onClear={() => setSearchUserIdText("")}/>
+                        <TextBox
+                            disabled={isUserGridLoading}
+                            variant={'default-with-search-icon'}
+                            placeholder={'Search user ID'}
+                            onEnter={setSearchUserIdText}
+                            value={searchUserIdText}
+                            onClear={() => setSearchUserIdText("")}/>
 
                     </div>
                     <Grid
