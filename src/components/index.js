@@ -1,4 +1,5 @@
 import EventJourney from './EventJourney/EventJourney.jsx';
+import FilterMenu from './FilterMenu/FilterMenu.jsx';
 import Grid from './Grid/Grid.jsx';
 import Icons from './Icons/Icons.jsx';
 import IntermediateLoader from './IntermediateLoader/IntermediateLoader.jsx';
@@ -9,4 +10,4 @@ import PerformanceMetric from './PerformanceMetric/PerformanceMetric.jsx';
 import TabPanel from './TabSwitch/TabPanel.jsx';
 import TabSwitch from './TabSwitch/TabSwitch.jsx';
 import TextBox from './TextBox/TextBox.jsx';
-export {EventJourney, Grid, Icons, IntermediateLoader, InvertedPrimaryButton, LeftMainMetric, Loader, PerformanceMetric, TabPanel, TabSwitch, TextBox};
+export {EventJourney, FilterMenu, Grid, Icons, IntermediateLoader, InvertedPrimaryButton, LeftMainMetric, Loader, PerformanceMetric, TabPanel, TabSwitch, TextBox};

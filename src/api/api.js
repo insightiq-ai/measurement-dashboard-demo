@@ -32,17 +32,6 @@ export async function getAttributionStatistics() {
     }
 }
 
-export async function getDashboardLinkMetrics() {
-    const api = getBasicAuthInstance(process.env.REACT_APP_CLIENT_ID_PROD, process.env.REACT_APP_CLIENT_SECRET_PROD, "https://api.insightiq.ai");
-
-    try {
-        const response = await api.get(`v1/measurement/dashboard/links/metrics`);
-        return response.data;
-    } catch (error) {
-        console.log(error);
-    }
-}
-
 export async function getUsers({ limit, offset }) {
 
     async function addEventTimestamp(users) {
@@ -72,7 +61,7 @@ export async function getUsers({ limit, offset }) {
 
     const api = getBasicAuthInstance(process.env.REACT_APP_CLIENT_ID_PROD, process.env.REACT_APP_CLIENT_SECRET_PROD, "https://api.insightiq.ai");
     try {
-        const response = await api.get(`v1/measurement/users?list_anonymous_users=true&list_users_with_no_events=true&limit=${limit}&offset=${offset}`);
+        const response = await api.get(`v1/measurement/users?list_only_anonymous_users=true&list_users_with_no_events=true&limit=${limit}&offset=${offset}`);
         const users = response.data;
 
         return users.data;
@@ -164,15 +153,15 @@ export async function getCreatorsData({ storeId }) {
     const creatorDataPromises = CREATOR_SPLIT.map(async (creator, index) => {
         const utm_clicks = await getUtmClicksForCreator(creatorToLinkIdMapping[creator.title]);
         const total_sales = await getTotalSalesForCreator(storeId, creatorToPromocodeMapping[creator.title]);
-        const { icon, title, metric } = creator;
+        const { icon, title, cost } = creator;
         return {
             id: index,
             icon,
             title,
             utm_clicks: utm_clicks,
-            creator_cost: metric,
+            creator_cost: cost,
             total_sales: total_sales,
-            roi: metric !== 0 ? (total_sales / metric) : 0,
+            roi: (cost !== 0) ? (total_sales / cost) : 0,
             platforms: creatorToPlatformMapping[title],
         };
     });

@@ -1,0 +1,104 @@
+.filter-dropdown-button {
+  min-width: 181px !important;
+  height: 56px;
+  padding: unset !important;
+
+  .dropdown-menu-arrows {
+    color: var(--neutrals-secondary-grey);
+    font-size: 20px;
+  }
+
+  > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    text-transform: none;
+    padding: 9px 20px;
+    border-radius: 6px;
+    border: 2px solid var(--neutrals-border-grey);
+    background: #FFF;
+    min-width: 181px !important;
+    height: 56px;
+    text-align: left;
+
+    > div {
+      display: flex;
+      gap: 4px;
+      flex-direction: column;
+    }
+  }
+
+  > div:hover, > div:focus {
+    border: 2px solid var(--main-primary);
+
+  }
+}
+
+.dropdown-menu {
+  transform: translateX(25px);
+
+  .filter-search-container {
+    padding: 24px 20px 16px 20px;
+  }
+
+  > .MuiPaper-root {
+    box-shadow: 0px 5px 15px 0px rgba(18, 27, 46, 0.15);
+    border-radius: 6px;
+  }
+}
+
+.dropdown-menu ul {
+  padding-top: 0;
+  padding-bottom: 0;
+  max-height: 455px;
+}
+
+.dropdown-button:hover,
+.dropdown-button:active,
+.dropdown-button:focus {
+  background-color: transparent !important;
+}
+
+.dropdown-button-icon {
+  font-size: 24px !important;
+  color: var(--neutrals-secondary-grey);
+}
+
+.first-item {
+  color: var(--neutrals-secondary-grey);
+  border-bottom: 2px solid var(--neutrals-border-grey) !important;
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+
+}
+
+.menu-item-content {
+  display: flex;
+  gap: 12px;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+  align-items: center;
+
+  img {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.check-box {
+  margin-top: 1px;
+  cursor: pointer;
+  z-index: 1;
+
+  .checked-box-icon {
+    font-size: 18px;
+    color: var(--main-primary);
+  }
+
+  .unchecked-box-icon {
+    font-size: 18px;
+    color: var(--neutrals-secondary-grey);
+
+  }
+}
