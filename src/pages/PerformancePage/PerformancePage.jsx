@@ -20,8 +20,6 @@ import { CustomFooter, getSortedHeaderClass } from "../../utils/DataGridUtils";
 import { DataGrid } from "@mui/x-data-grid";
 import { Colors } from "../../styles/colors";
 import { useNavigate } from "react-router-dom";
-import { debounce } from "lodash";
-import axios from "axios";
 
 export default function PerformancePage(props) {
     const [analytics, setAnalytics] = useState(null);
@@ -118,9 +116,7 @@ export default function PerformancePage(props) {
             limit: PAGE_SIZE,
             offset: pageNumber * PAGE_SIZE,
         })
-            .then((users) => {
-                setUserRows(users);
-            })
+            .then(setUserRows)
             .finally(() => {
                 setUserGridLoading(false);
             });
@@ -159,52 +155,6 @@ export default function PerformancePage(props) {
             setTotalUserRows(attributionStatistics.number_of_users);
         }
     }, [attributionStatistics]);
-
-    // const delay = 500;
-    // const [cancelToken, setCancelToken] = useState(null);
-    //
-    // const handleSearch = debounce((searchQuery) => {
-    //     setSearchQuery(searchQuery);
-    //     // Cancel the previous API call, if any
-    //     if (cancelToken) {
-    //         cancelToken.cancel("Canceled due to new search query");
-    //     }
-    //
-    //     // Create a new cancel token for the current API call
-    //     const newCancelToken = axios.CancelToken.source();
-    //     setCancelToken(newCancelToken);
-    //
-    //     // Make API call to search for repositories on GitHub
-    //     if (searchQuery.trim() !== "") {
-    //         // Only make API call if searchQuery is not empty
-    //         setLoading(true);
-    //         handlePostSearch({ searchQuery, newCancelToken })
-    //             .then((response) => {
-    //                 setSearchResults(response);
-    //                 setLoading(false);
-    //                 if (filterKey === CREATOR_LOOKALIKES || filterKey === AUDIENCE_LOOKALIKES || filterKey === CREATOR_LOCATIONS || filterKey === AUDIENCE_LOCATIONS) {
-    //                     trackEvent(FILTER_SEARCHED, {
-    //                         query: searchQuery,
-    //                         source: FILTER_KEY_MAPPING[filterKey],
-    //                         result_count: response.length,
-    //                     });
-    //                 }
-    //             })
-    //             .catch((error) => {
-    //                 if (axios.isCancel(error)) {
-    //                     console.log("Canceled due to new search query");
-    //                 } else {
-    //                     setError(error);
-    //                     setLoading(false);
-    //                 }
-    //             });
-    //     } else {
-    //         // If searchQuery is empty, clear the search results
-    //         setSearchResults([]);
-    //         setLoading(false);
-    //         setError(null);
-    //     }
-    // }, delay);
 
     const commonHeaderProps = {
         flex: 1,
