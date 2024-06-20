@@ -122,12 +122,21 @@ export default function PerformancePage(props) {
             });
     }
 
+    function fetchTotalUsersCount() {
+        if (!isEmpty(attributionStatistics)) {
+            getUsers({
+                list_only_anonymous_users: false,
+            }).then(rows => {
+                setTotalUserRows(attributionStatistics.number_of_users - rows.length);
+            });
+        }
+
+    }
+
     useEffect(() => {
         if (isEmpty(searchUserIdText)) {
             fetchUsers();
-            if (!isEmpty(attributionStatistics)) {
-                setTotalUserRows(attributionStatistics.number_of_users);
-            }
+            fetchTotalUsersCount();
         } else {
             setUserGridLoading(true);
             getUserById({
@@ -143,17 +152,13 @@ export default function PerformancePage(props) {
             }).catch((error) => {
                 console.error("Error fetching user data", error);
                 fetchUsers();
-                if (!isEmpty(attributionStatistics)) {
-                    setTotalUserRows(attributionStatistics.number_of_users);
-                }
+                fetchTotalUsersCount();
             }).finally(() => setUserGridLoading(false));
         }
     }, [pageNumber, searchUserIdText]);
 
     useEffect(() => {
-        if (!isEmpty(attributionStatistics)) {
-            setTotalUserRows(attributionStatistics.number_of_users);
-        }
+        fetchTotalUsersCount();
     }, [attributionStatistics]);
 
     const commonHeaderProps = {

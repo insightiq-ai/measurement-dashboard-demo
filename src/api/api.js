@@ -32,7 +32,7 @@ export async function getAttributionStatistics() {
     }
 }
 
-export async function getUsers({ limit, offset }) {
+export async function getUsers({ limit, offset, list_only_anonymous_users = true }) {
 
     async function addEventTimestamp(users) {
         // Fetch events for all users concurrently
@@ -61,7 +61,13 @@ export async function getUsers({ limit, offset }) {
 
     const api = getBasicAuthInstance(process.env.REACT_APP_CLIENT_ID_PROD, process.env.REACT_APP_CLIENT_SECRET_PROD, "https://api.insightiq.ai");
     try {
-        const response = await api.get(`v1/measurement/users?list_only_anonymous_users=true&list_users_with_no_events=true&limit=${limit}&offset=${offset}`);
+        const url = new URL("https://api.insightiq.ai/" + `v1/measurement/users`);
+        !isEmpty(limit) && url.searchParams.append("limit", limit);
+        !isEmpty(offset) && url.searchParams.append("offset", offset);
+        !isEmpty(list_only_anonymous_users) && url.searchParams.append("list_only_anonymous_users", String(list_only_anonymous_users));
+        url.searchParams.append("list_users_with_no_events", String(true));
+
+        const response = await api.get(url.href);
         const users = response.data;
 
         return users.data;
@@ -84,11 +90,11 @@ export async function getUserById({ userId }) {
 export async function getUserEvents({ userId, limit, offset }) {
     const api = getBasicAuthInstance(process.env.REACT_APP_CLIENT_ID_PROD, process.env.REACT_APP_CLIENT_SECRET_PROD, "https://api.insightiq.ai");
     try {
-        let url = `v1/measurement/attribution/events`;
-        !isEmpty(userId) && (url += `?user_id=${userId}`);
-        !isEmpty(limit) && (url += `&limit=${limit}`);
-        !isEmpty(offset) && (url += `&offset=${offset}`);
-        const response = await api.get(url);
+        const url = new URL("https://api.insightiq.ai/" + `v1/measurement/attribution/events`);
+        !isEmpty(userId) && url.searchParams.append("user_id", userId);
+        !isEmpty(limit) && url.searchParams.append("limit", limit);
+        !isEmpty(offset) && url.searchParams.append("offset", offset);
+        const response = await api.get(url.href);
         return response.data?.data;
     } catch (error) {
         console.log(error);
