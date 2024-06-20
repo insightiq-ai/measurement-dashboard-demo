@@ -19,14 +19,35 @@ function ListComponent({ userEvent, isLastItem }) {
     const affliateCreatorIcon = isCreatorPresent ? platformToCreatorMapping[userEvent.utm_medium].icon :
         <Icons.users_icon/>;
     const storeLink = !isEmpty(userEvent.window_location) ? userEvent.window_location : "-";
-    const deviceDetails = userEvent.device_details.device ?? "-";
-    const browser = userEvent.device_details.browser ?? "-";
+    const browser = userEvent.device_details?.browser ?? "-";
     const { event_source } = userEvent;
-    // if (event_source === "PROMOCODES") {
-    //     return <span>Hello</span>
-    // }
 
     const eventTimeStamp = !isEmpty(userEvent?.event_timestamp) ? convertTimeToLocale(userEvent?.event_timestamp) : "-";
+
+    function getBrowserIcon(browser) {
+        browser = browser.toLowerCase();
+        if (browser.includes('chrome')) {
+            return <Icons.chrome/>;
+        } else if (browser.includes('safari')) {
+            return <Icons.safari/>;
+        } else if (browser.includes('firefox')) {
+            return <Icons.firefox/>;
+        } else {
+            return <Icons.chrome/>;
+        }
+    }
+
+    function getDevice(device_details) {
+        if (isEmpty(device_details)) {
+            return "-";
+        }
+        const { device, operating_system } = device_details;
+        if (device.toLowerCase() === 'linux') {
+            return operating_system;
+        }
+        return device;
+    }
+
     return (
         <div className="list-parent-container">
             {isCreatorPresent ? (
@@ -68,10 +89,10 @@ function ListComponent({ userEvent, isLastItem }) {
                             <div className="affiliate-device-details">
                                 <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                                     <Icons.smartphone_line/>
-                                    <span>{deviceDetails}</span>
+                                    <span>{getDevice(userEvent?.device_details)}</span>
                                 </div>
                                 <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                                    {browser === "Safari" ? <Icons.safari/> : <Icons.chrome/>}
+                                    {getBrowserIcon(browser)}
                                     <span>{browser}</span>
                                 </div>
                             </div>
